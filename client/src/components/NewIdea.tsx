@@ -3,9 +3,23 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { api } from '../lib/api';
 import { useStore } from '../state/ProjectContext';
+import { useAuth } from '../state/AuthContext';
 import { Modal } from './ui/Modal';
 import { Textarea } from './ui/primitives';
 import { Button } from './ui/Button';
+
+const PENDING_KEY = 'ideaforge.pendingIdea';
+
+/** An idea typed before signing in, kept until the account exists. */
+export function takePendingIdea(): string | null {
+  try {
+    const idea = sessionStorage.getItem(PENDING_KEY);
+    sessionStorage.removeItem(PENDING_KEY);
+    return idea;
+  } catch {
+    return null;
+  }
+}
 
 export function validateIdea(idea: string): string | null {
   const text = idea.trim();
@@ -20,12 +34,23 @@ export function useCreateProject() {
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { setProject } = useStore();
+  const { status } = useAuth();
   const navigate = useNavigate();
 
   const create = async (idea: string) => {
     const invalid = validateIdea(idea);
     if (invalid) {
       setError(invalid);
+      return;
+    }
+    if (status !== 'signed-in') {
+      // Keep the idea and continue it right after sign-up.
+      try {
+        sessionStorage.setItem(PENDING_KEY, idea.trim());
+      } catch {
+        /* storage unavailable — the user can retype it */
+      }
+      navigate('/signup?next=/new-idea');
       return;
     }
     setCreating(true);

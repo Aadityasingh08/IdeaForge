@@ -1,5 +1,7 @@
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import { originCheck, sessionMiddleware } from './utils/auth';
 import { env } from './config/env';
 import { createRouter } from './routes';
 import { errorHandler } from './utils/http';
@@ -17,9 +19,12 @@ export function createApp() {
       origin: (origin, cb) => cb(null, !origin || env.clientUrls.includes(origin)),
       methods: ['GET', 'POST', 'PATCH', 'DELETE'],
       allowedHeaders: ['Content-Type', 'X-IdeaForge-Owner'],
+      credentials: true, // allow the session cookie
     }),
   );
   app.use(express.json({ limit: '100kb' }));
+  app.use(cookieParser());
+  app.use('/api', originCheck, sessionMiddleware);
 
   app.use('/api', createRouter(orchestrator));
   app.use('/api', (_req, res) => {

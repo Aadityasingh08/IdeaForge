@@ -11,6 +11,8 @@ export type ErrorCode =
   | 'PRECONDITION_FAILED'
   | 'DATABASE_ERROR'
   | 'RATE_LIMITED'
+  | 'UNAUTHORIZED'
+  | 'FORBIDDEN'
   | 'INTERNAL_ERROR';
 
 export class ApiError extends Error {

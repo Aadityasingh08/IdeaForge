@@ -49,7 +49,11 @@ IdeaForge behaves like a strategist, not a slot machine:
 - **Out-of-date detection** — change the strategy after generating visuals or the kit and IdeaForge tells you what changed and offers a rebuild
 - **Version history** — a snapshot before every change; restore any point (restores are undoable too)
 - **Shareable brand page** — publish a read-only public page at `/b/:projectId`
-- **Private per browser** — projects are scoped to an anonymous browser id (not a login)
+- **Accounts** — sign up, log in (with “Remember me”), log out, sign out everywhere, forgot/reset password, profile, change password and delete account
+- **Secure cookie sessions** — a random session token in an `httpOnly`, `SameSite`, `Secure` (production) cookie; only its SHA-256 hash is stored, sessions are revocable and expire automatically
+- **Cookie notice & policy** — one essential cookie, no tracking; `/cookies` lists everything stored
+- **Security** — bcrypt password hashing, timing-safe login, brute-force limits on auth endpoints, CSRF origin checks, open-redirect-safe “next” links
+- **Ideas survive sign-up** — type an idea before having an account and the project is created right after you register; ideas started before logging in move into your account
 - **Rate limiting** on the API, with a stricter limit on paid AI endpoints
 - **Automated tests** (Vitest) and a **prompt-quality eval** (`npm run eval`)
 - **Persistence** — refresh anytime; every decision is saved in MongoDB
@@ -181,6 +185,9 @@ IdeaForge/
 | `AI_TIMEOUT_MS` | Optional per-call timeout (default `120000`) |
 | `CLIENT_URL` | Allowed browser origin(s) for CORS, comma-separated |
 | `API_RATE_LIMIT` / `AI_RATE_LIMIT` | Requests per minute per IP for the API / AI endpoints (defaults 300 / 30) |
+| `SESSION_DAYS` / `REMEMBER_DAYS` | Session length without / with “Remember me” (defaults 1 / 30) |
+| `COOKIE_SAMESITE` / `COOKIE_SECURE` | Cookie settings. Defaults: `lax` + not secure in development, `none` + secure in production |
+| `AUTH_RATE_LIMIT` | Sign-up/log-in/reset attempts per 15 minutes per IP (default 20) |
 | `AI_SIMULATE_FAILURE` | Dev only — comma-separated tasks to force-fail (e.g. `challenge`) to demo Retry |
 
 **client/.env** (copy from `client/.env.example`)
@@ -247,7 +254,26 @@ With `AI_PROVIDER=fallback` (the default) the **DevelopmentFallbackProvider** ru
 
 ## API Endpoints
 
-Every request except `/health` and `/share` sends an `X-IdeaForge-Owner` header — an anonymous id the client keeps in localStorage. It keeps each browser's projects private; it is not authentication.
+Project and AI endpoints require a signed-in session (the `if_session` cookie); without one they return `401`. Browser requests that change data must come from an allowed `CLIENT_URL` origin (CSRF protection).
+
+**Accounts**
+
+| Method | Path | Purpose |
+|---|---|---|
+| POST | `/api/auth/signup` | `{ name, email, password, remember? }` → creates the account and a session |
+| POST | `/api/auth/login` | `{ email, password, remember? }` |
+| POST | `/api/auth/logout` | Ends this session |
+| POST | `/api/auth/logout-all` | Ends every session for the account |
+| GET | `/api/auth/me` | Current user, or `null` |
+| PATCH | `/api/auth/me` | `{ name }` |
+| POST | `/api/auth/change-password` | `{ current, next }` — signs out other devices |
+| DELETE | `/api/auth/me` | `{ password }` — deletes the account and all of its projects |
+| POST | `/api/auth/forgot-password` | `{ email }` — same response whether or not the account exists |
+| POST | `/api/auth/reset-password` | `{ token, password }` — single-use, expires after 30 minutes |
+
+No email service is connected yet, so the password-reset link is printed in the **server log**. Connect a provider (e.g. Resend, Postmark) in `requestPasswordReset` in `server/src/services/auth.service.ts` to email it.
+
+**Projects & AI**
 
 All responses use `{ "success": true, "data": … }` or `{ "success": false, "error": { "code", "message" } }`.
 Errors: `400` validation · `404` not found · `409` stage prerequisite missing · `502` AI failure · `500` database/internal.
@@ -351,6 +377,14 @@ To demo failure handling, start the server with `AI_SIMULATE_FAILURE=challenge` 
 
 No URLs are hard-coded; everything is configured through environment variables.
 
+**Cookies across domains (important for login).** Many browsers block cookies set by a different domain, so the most reliable setup keeps the API on the same site as the frontend. In `client/vercel.json`, add a rewrite **before** the SPA rewrite so Vercel forwards API calls to Render:
+
+```json
+{ "source": "/api/(.*)", "destination": "https://YOUR-API.onrender.com/api/$1" }
+```
+
+Then set `VITE_API_BASE_URL=/api` on Vercel, and on Render set `CLIENT_URL` to your Vercel URL and `COOKIE_SAMESITE=lax`. The session cookie is then first-party and works in every browser.
+
 ## Testing & Prompt Evaluation
 
 ```bash
@@ -367,7 +401,8 @@ Runs the whole pipeline on five sample ideas and scores the Challenge engine: ar
 
 ## Future Improvements
 
-- Real accounts (Google sign-in) and team workspaces with comments on decisions
+- Google sign-in, email verification and emailed reset links (needs an email provider)
+- Team workspaces with comments on decisions
 - Competitor research with web search grounding in the Understand and Challenge stages (needs an API key)
 - Side-by-side comparison of two or three competing brand directions
 - Downloadable SVG/PNG logo files and a social-asset pack

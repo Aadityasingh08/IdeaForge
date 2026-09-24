@@ -4,6 +4,32 @@ import { ArrowRight, Brain, Layers, Swords } from 'lucide-react';
 import { Logo, Sparkle } from '../components/ui/Logo';
 import { ButtonLink } from '../components/ui/Button';
 import { useCreateProject } from '../components/NewIdea';
+import { useAuth } from '../state/AuthContext';
+import { UserMenu } from '../components/UserMenu';
+
+function HeaderActions() {
+  const { status } = useAuth();
+  if (status === 'signed-in') {
+    return (
+      <div className="flex items-center gap-2">
+        <ButtonLink to="/projects" variant="primary" size="sm" iconRight={<ArrowRight className="size-3.5" />}>
+          Your ideas
+        </ButtonLink>
+        <UserMenu />
+      </div>
+    );
+  }
+  return (
+    <div className="flex items-center gap-2">
+      <Link to="/login" className="rounded-lg px-3 py-2 text-sm font-semibold text-body hover:text-ink">
+        Log in
+      </Link>
+      <ButtonLink to="/signup" variant="primary" size="sm" iconRight={<ArrowRight className="size-3.5" />}>
+        Get Started
+      </ButtonLink>
+    </div>
+  );
+}
 
 // Label centres (in %) around the crystal; anchored by centre so they never leave the frame.
 const ORBIT = [
@@ -122,7 +148,7 @@ function IdeaInput() {
         </div>
       </div>
       <p id={error ? 'idea-error' : 'idea-hint'} className={`mt-2.5 px-2 text-[13px] ${error ? 'font-medium text-danger' : 'text-muted'}`} role={error ? 'alert' : undefined}>
-        {error ?? 'Press Enter to start — no sign-up needed.'}
+        {error ?? 'Press Enter to start — your idea is saved while you create a free account.'}
       </p>
       <div className="mt-3 flex flex-wrap items-center gap-2 px-1">
         <span className="text-xs font-medium text-muted">Try:</span>
@@ -189,14 +215,7 @@ export default function Landing() {
               Examples
             </a>
           </nav>
-          <div className="flex items-center gap-2">
-            <Link to="/projects" className="hidden rounded-lg px-3 py-2 text-sm font-semibold text-body hover:text-ink sm:block">
-              Your ideas
-            </Link>
-            <ButtonLink to="/projects" variant="primary" size="sm" iconRight={<ArrowRight className="size-3.5" />}>
-              Get Started
-            </ButtonLink>
-          </div>
+          <HeaderActions />
         </div>
       </header>
 
@@ -299,7 +318,12 @@ export default function Landing() {
       <footer className="border-t border-line">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-4 py-8 text-sm text-muted sm:flex-row sm:px-6">
           <Logo />
-          <p>Turn your idea into a brand.</p>
+          <p className="flex items-center gap-4">
+            <span>Turn your idea into a brand.</span>
+            <Link to="/cookies" className="font-medium hover:text-ink">
+              Cookie policy
+            </Link>
+          </p>
         </div>
       </footer>
     </div>

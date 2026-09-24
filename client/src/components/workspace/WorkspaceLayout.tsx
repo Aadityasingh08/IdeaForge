@@ -11,6 +11,7 @@ import { EmptyState, ErrorState } from '../ui/states';
 import { Tooltip } from '../ui/primitives';
 import { BrandDNAPanel } from './BrandDNAPanel';
 import { VersionHistory } from './VersionHistory';
+import { UserMenu } from '../UserMenu';
 
 function StageNavigation({ project, onNavigate }: { project: Project; onNavigate?: () => void }) {
   const statuses = stageStatuses(project.brandDNA);
@@ -193,9 +194,7 @@ export function WorkspaceLayout() {
           <AIModeIndicator />
           <ProgressPill project={project} />
           <VersionHistory project={project} />
-          <span className="grid size-8 shrink-0 place-items-center rounded-full bg-gradient-to-br from-mint to-ice text-xs font-bold text-white ring-2 ring-white" aria-label="Your account" role="img">
-            Y
-          </span>
+          <UserMenu />
         </div>
       </header>
 

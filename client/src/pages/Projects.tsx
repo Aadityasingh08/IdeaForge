@@ -10,6 +10,7 @@ import { ProjectCard } from '../components/brand/ProjectCard';
 import { NewIdeaDialog } from '../components/NewIdea';
 import { Modal } from '../components/ui/Modal';
 import { useToast } from '../components/ui/Toast';
+import { UserMenu } from '../components/UserMenu';
 
 export default function Projects() {
   const [projects, setProjects] = useState<ProjectSummary[] | null>(null);
@@ -58,9 +59,7 @@ export default function Projects() {
       <header className="sticky top-0 z-30 border-b border-line bg-white/85 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           <Logo />
-          <span className="grid size-8 place-items-center rounded-full bg-gradient-to-br from-mint to-ice text-xs font-bold text-white" role="img" aria-label="Your account">
-            Y
-          </span>
+          <UserMenu />
         </div>
       </header>
 

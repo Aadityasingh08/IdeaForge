@@ -1,13 +1,8 @@
 import type { Request } from 'express';
-import { OwnerHeader } from '../schemas/request.schemas';
 import { ApiError } from './http';
 
-/**
- * Projects are private to the browser that created them via an anonymous owner id.
- * This keeps demo data separate between visitors; it is not authentication.
- */
+/** Projects belong to the signed-in account. Routes using this sit behind requireAuth. */
 export function ownerOf(req: Request): string {
-  const parsed = OwnerHeader.safeParse(req.header('x-ideaforge-owner'));
-  if (!parsed.success) throw new ApiError(400, 'VALIDATION_ERROR', 'Missing or invalid X-IdeaForge-Owner header.');
-  return parsed.data;
+  if (!req.user) throw new ApiError(401, 'UNAUTHORIZED', 'Please log in to continue.');
+  return String(req.user._id);
 }

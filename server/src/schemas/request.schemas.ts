@@ -45,3 +45,19 @@ export const AlternativesBody = z.object({ projectId: objectId, challengeId: cha
 
 /** Anonymous per-browser owner id sent in the X-IdeaForge-Owner header. */
 export const OwnerHeader = z.string().uuid();
+
+// ---------- Accounts
+const email = z.string().trim().toLowerCase().email('Enter a valid email address.').max(254);
+export const password = z
+  .string()
+  .min(8, 'Use at least 8 characters.')
+  .max(128, 'Use at most 128 characters.')
+  .refine((p) => /[a-z]/i.test(p) && /\d/.test(p), 'Include at least one letter and one number.');
+
+export const SignupBody = z.object({ name: z.string().trim().min(1, 'Tell us your name.').max(60), email, password, remember: z.boolean().optional() });
+export const LoginBody = z.object({ email, password: z.string().min(1, 'Enter your password.').max(128), remember: z.boolean().optional() });
+export const ForgotBody = z.object({ email });
+export const ResetBody = z.object({ token: z.string().min(20).max(200), password });
+export const ProfileBody = z.object({ name: z.string().trim().min(1).max(60) });
+export const ChangePasswordBody = z.object({ current: z.string().min(1).max(128), next: password });
+export const DeleteAccountBody = z.object({ password: z.string().min(1).max(128) });

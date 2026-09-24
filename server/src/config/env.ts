@@ -26,6 +26,20 @@ export const env = {
   // Requests per minute per IP: all API calls, and the (paid) AI endpoints.
   apiRateLimit: Number(process.env.API_RATE_LIMIT) || 300,
   aiRateLimit: Number(process.env.AI_RATE_LIMIT) || 30,
+  // Sign-up / log-in / reset attempts per 15 minutes per IP.
+  authRateLimit: Number(process.env.AUTH_RATE_LIMIT) || 20,
 };
 
 export const isProduction = env.nodeEnv === 'production';
+
+const sameSite = (process.env.COOKIE_SAMESITE || (isProduction ? 'none' : 'lax')).toLowerCase();
+
+/** Session cookie settings. Production defaults suit a frontend and API on different domains. */
+export const authConfig = {
+  cookieName: 'if_session',
+  sessionDays: Number(process.env.SESSION_DAYS) || 1,
+  rememberDays: Number(process.env.REMEMBER_DAYS) || 30,
+  sameSite: (['lax', 'strict', 'none'].includes(sameSite) ? sameSite : 'lax') as 'lax' | 'strict' | 'none',
+  secure: process.env.COOKIE_SECURE ? process.env.COOKIE_SECURE === 'true' : isProduction,
+  appUrl: env.clientUrls[0],
+};

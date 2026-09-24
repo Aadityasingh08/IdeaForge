@@ -29,6 +29,7 @@ async function request<T>(path: string, init?: RequestInit & { json?: unknown })
   try {
     res = await fetch(`${BASE}${path}`, {
       ...init,
+      credentials: 'include', // send the httpOnly session cookie
       headers: { 'Content-Type': 'application/json', 'X-IdeaForge-Owner': ownerId(), ...(init?.headers ?? {}) },
       body: init?.json !== undefined ? JSON.stringify(init.json) : init?.body,
     });
@@ -43,6 +44,10 @@ async function request<T>(path: string, init?: RequestInit & { json?: unknown })
     // Proxy/gateway errors (backend down) come back as non-JSON.
     if (res.status >= 500) throw new NetworkError();
   }
+  if (res.status === 401 && !path.startsWith('/auth/')) {
+    // Session expired or signed out elsewhere — let the app send the user to log in.
+    window.dispatchEvent(new Event('ideaforge:unauthorized'));
+  }
   if (!res.ok || !payload?.success) {
     if (res.status === 502 && !payload) throw new NetworkError();
     throw new ApiError(res.status, payload?.error?.code ?? 'UNKNOWN', payload?.error?.message ?? 'Something went wrong.');
@@ -56,6 +61,26 @@ export interface Edit {
   path: string;
   value: unknown;
 }
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: string;
+}
+
+export const authApi = {
+  me: () => request<User | null>('/auth/me'),
+  signup: (body: { name: string; email: string; password: string; remember?: boolean }) => post<User>('/auth/signup', body),
+  login: (body: { email: string; password: string; remember?: boolean }) => post<User>('/auth/login', body),
+  logout: () => request<{ loggedOut: boolean }>('/auth/logout', { method: 'POST' }),
+  logoutAll: () => request<{ loggedOut: boolean }>('/auth/logout-all', { method: 'POST' }),
+  forgotPassword: (email: string) => post<{ message: string }>('/auth/forgot-password', { email }),
+  resetPassword: (token: string, password: string) => post<User>('/auth/reset-password', { token, password }),
+  updateProfile: (name: string) => request<User>('/auth/me', { method: 'PATCH', json: { name } }),
+  changePassword: (current: string, next: string) => post<{ changed: boolean }>('/auth/change-password', { current, next }),
+  deleteAccount: (password: string) => request<{ deleted: boolean }>('/auth/me', { method: 'DELETE', json: { password } }),
+};
 
 export const api = {
   health: () => request<{ status: string; database: string; ai: 'connected' | 'demo' }>('/health'),
