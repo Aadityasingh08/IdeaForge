@@ -31,7 +31,7 @@ export interface ParsedIdea {
 }
 
 const STOP = new Set(
-  'that this with from have want build create make launch helps help their them they what where when which your into about platform app application tool service website people users would could should will just like more most very also some other only such than then these those being been were does doing each few many much ones over same find easily better'.split(
+  'that this with from have want build create make launch helps help their them they what where when which your into about platform app application tool service website community newsletter marketplace podcast course store extension people users would could should will just like more most very also some other only such than then these those being been were does doing each few many much ones over same find easily better'.split(
     ' ',
   ),
 );
@@ -273,7 +273,7 @@ export function parseIdea(raw: string): ParsedIdea {
 
   const helps = clean.match(new RegExp(`\\bhelps?\\s+(.+?)\\s+(?:to\\s+)?((?:${VERBS})\\b.*)$`, 'i'));
   const forWho = clean.match(/\bfor\s+([a-z][a-z\s-]{2,60}?)(?:\s+(?:to|who|that|so)\b|[,.]|$)/i);
-  const lets = clean.match(new RegExp(`\\b(?:lets|allows|enables)\\s+(.+?)\\s+(?:to\\s+)?((?:${VERBS})\\b.*)$`, 'i'));
+  const lets = clean.match(new RegExp(`\\b(?:lets|allows|enables|where|so that)\\s+(.+?)\\s+(?:to\\s+)?((?:${VERBS})\\b.*)$`, 'i'));
 
   if (helps) {
     audience = helps[1];

@@ -1,5 +1,6 @@
 import { z, type ZodType } from 'zod';
-import type { BrandDNA, Stage } from '../types/brandDNA';
+import type { BrandDNA, Stage, TrackedSection } from '../types/brandDNA';
+import { LOGO_CONCEPTS } from '../types/brandDNA';
 import { STAGES } from '../types/brandDNA';
 import type { ChallengeTarget } from '../schemas/ai.schemas';
 
@@ -46,10 +47,21 @@ export const EDITABLE_FIELDS: Record<string, ZodType> = {
   'messaging.tone': str,
   'messaging.voice': strList,
   'messaging.principles': strList,
+  'logo.concept': z.enum(LOGO_CONCEPTS),
 };
 
+const TRACKED: TrackedSection[] = ['idea', 'positioning', 'personality', 'naming', 'messaging', 'visual', 'logo'];
+
+/** Records that a section changed now (drives "out of date" warnings in the UI). */
+export function touch(dna: BrandDNA, pathOrSection: string) {
+  const section = pathOrSection.split('.')[0] as TrackedSection;
+  if (!TRACKED.includes(section)) return;
+  dna.meta ??= { updatedAt: {} };
+  dna.meta.updatedAt[section] = new Date().toISOString();
+}
+
 /** Selections are decisions, not edits — they do not lock a field against regeneration. */
-const SELECTION_FIELDS = new Set(['naming.selectedTerritory', 'naming.selectedName']);
+const SELECTION_FIELDS = new Set(['naming.selectedTerritory', 'naming.selectedName', 'logo.concept']);
 export const isSelectionField = (path: string) => SELECTION_FIELDS.has(path);
 
 export function getPath(dna: BrandDNA, path: string): unknown {

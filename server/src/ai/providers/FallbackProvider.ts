@@ -32,7 +32,8 @@ export class FallbackProvider implements AIProvider {
     schema: ZodType<T>,
     { task, dna, extra }: AIRequestOptions,
   ): Promise<T> {
-    await new Promise((r) => setTimeout(r, 900 + Math.random() * 900)); // feel like real work
+    // Feel like real work in the UI; instant under tests.
+    if (process.env.NODE_ENV !== 'test') await new Promise((r) => setTimeout(r, 900 + Math.random() * 900));
     // Dev-only: AI_SIMULATE_FAILURE=challenge,visual makes those tasks fail, to demo Retry / Continue manually.
     if ((process.env.AI_SIMULATE_FAILURE ?? '').split(',').map((s) => s.trim()).includes(task)) {
       throw new AIProviderError(`Simulated failure for "${task}" (AI_SIMULATE_FAILURE).`);

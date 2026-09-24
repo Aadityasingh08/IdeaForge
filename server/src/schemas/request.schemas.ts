@@ -9,6 +9,7 @@ export const CreateProjectBody = z.object({ rawIdea: idea });
 export const PatchProjectBody = z
   .object({
     name: z.string().trim().min(1).max(80).optional(),
+    shared: z.boolean().optional(),
     edits: z.array(z.object({ path: z.string().max(80), value: z.unknown() })).max(20).optional(),
     accept: z.array(z.string().max(80)).max(20).optional(),
   })
@@ -21,6 +22,7 @@ export const UnderstandBody = z.object({ projectId: objectId, rawIdea: idea.opti
 export const StrategyBody = z.object({
   projectId: objectId,
   section: z.enum(['positioning', 'personality', 'naming', 'messaging']).optional(),
+  mode: z.enum(['regenerate', 'fill']).optional(),
 });
 
 const challengeRef = z.union([z.string().uuid(), z.literal('direction')]);
@@ -40,3 +42,6 @@ export const ApplyBody = z.discriminatedUnion('action', [
 ]);
 
 export const AlternativesBody = z.object({ projectId: objectId, challengeId: challengeRef });
+
+/** Anonymous per-browser owner id sent in the X-IdeaForge-Owner header. */
+export const OwnerHeader = z.string().uuid();

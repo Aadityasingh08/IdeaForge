@@ -1,4 +1,5 @@
-import type { AIRunSummary, Alternative, ChallengeTarget, Project, ProjectSummary, StrategySection } from './types';
+import type { AIRunSummary, Alternative, ChallengeTarget, Project, ProjectSummary, SharedBrand, StrategySection, VersionSummary } from './types';
+import { ownerId } from './owner';
 
 const BASE = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.replace(/\/$/, '') || '/api';
 
@@ -28,7 +29,7 @@ async function request<T>(path: string, init?: RequestInit & { json?: unknown })
   try {
     res = await fetch(`${BASE}${path}`, {
       ...init,
-      headers: { 'Content-Type': 'application/json', ...(init?.headers ?? {}) },
+      headers: { 'Content-Type': 'application/json', 'X-IdeaForge-Owner': ownerId(), ...(init?.headers ?? {}) },
       body: init?.json !== undefined ? JSON.stringify(init.json) : init?.body,
     });
   } catch {
@@ -62,13 +63,16 @@ export const api = {
   listProjects: () => request<ProjectSummary[]>('/projects'),
   getProject: (id: string) => request<Project>(`/projects/${id}`),
   createProject: (rawIdea: string) => post<Project>('/projects', { rawIdea }),
-  patchProject: (id: string, body: { name?: string; edits?: Edit[]; accept?: string[] }) =>
+  patchProject: (id: string, body: { name?: string; shared?: boolean; edits?: Edit[]; accept?: string[] }) =>
     request<Project>(`/projects/${id}`, { method: 'PATCH', json: body }),
   deleteProject: (id: string) => request<{ deleted: boolean }>(`/projects/${id}`, { method: 'DELETE' }),
   listRuns: (id: string) => request<AIRunSummary[]>(`/projects/${id}/runs`),
+  listVersions: (id: string) => request<VersionSummary[]>(`/projects/${id}/versions`),
+  restoreVersion: (id: string, versionId: string) => request<Project>(`/projects/${id}/versions/${versionId}/restore`, { method: 'POST' }),
+  shared: (id: string) => request<SharedBrand>(`/share/${id}`),
 
   understand: (projectId: string, rawIdea?: string) => post<Project>('/ai/understand', { projectId, rawIdea }),
-  strategy: (projectId: string, section?: StrategySection) => post<Project>('/ai/strategy', { projectId, section }),
+  strategy: (projectId: string, section?: StrategySection, mode?: 'regenerate' | 'fill') => post<Project>('/ai/strategy', { projectId, section, mode }),
   challenge: (projectId: string) => post<Project>('/ai/challenge', { projectId }),
   acceptImprovement: (
     projectId: string,

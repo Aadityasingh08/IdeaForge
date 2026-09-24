@@ -73,6 +73,11 @@ export interface VisualSection {
   rationale: string;
 }
 
+export const LOGO_CONCEPTS = ['monogram', 'spark', 'orbit', 'wordmark'] as const;
+export type LogoConcept = (typeof LOGO_CONCEPTS)[number];
+
+export type TrackedSection = 'idea' | 'positioning' | 'personality' | 'naming' | 'messaging' | 'visual' | 'logo';
+
 export type ChallengeResolution = 'accepted' | 'kept_original' | 'alternative' | 'edited';
 
 export interface ChallengeItem {
@@ -119,6 +124,9 @@ export interface BrandDNA {
   consistency?: ConsistencyOutput & { ranAt: string };
   brandKit?: BrandKitOutput & { generatedAt: string };
   finalBrand?: { name: string; tagline: string; summary: string };
+  logo?: { concept: LogoConcept };
+  /** When each section last changed — lets the UI flag downstream work that is out of date. */
+  meta?: { updatedAt: Partial<Record<TrackedSection, string>> };
   /** Human decisions — AI treats edited fields as fixed and must build on them. */
   decisions: {
     edited: string[];

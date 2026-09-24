@@ -65,6 +65,14 @@ function Crystal() {
   );
 }
 
+const QUICK_STARTS = ['Hackathon teammates', 'Weeknight dinners', 'Freelance invoicing', 'Creator newsletter'];
+const QUICK_IDEAS: Record<string, string> = {
+  'Hackathon teammates': 'I want to build a platform that helps college students find teammates for hackathons.',
+  'Weeknight dinners': 'An app that helps busy parents plan a week of healthy dinners in five minutes',
+  'Freelance invoicing': 'A tool for freelancers to track invoices and get paid faster',
+  'Creator newsletter': 'A newsletter that helps indie creators grow their first 1,000 subscribers',
+};
+
 function IdeaInput() {
   const [idea, setIdea] = useState('');
   const { create, creating, error, setError } = useCreateProject();
@@ -116,6 +124,23 @@ function IdeaInput() {
       <p id={error ? 'idea-error' : 'idea-hint'} className={`mt-2.5 px-2 text-[13px] ${error ? 'font-medium text-danger' : 'text-muted'}`} role={error ? 'alert' : undefined}>
         {error ?? 'Press Enter to start — no sign-up needed.'}
       </p>
+      <div className="mt-3 flex flex-wrap items-center gap-2 px-1">
+        <span className="text-xs font-medium text-muted">Try:</span>
+        {QUICK_STARTS.map((q) => (
+          <button
+            key={q}
+            type="button"
+            onClick={() => {
+              setIdea(QUICK_IDEAS[q]);
+              setError(null);
+              document.getElementById('idea')?.focus();
+            }}
+            className="rounded-full border border-line bg-white/80 px-3 py-1 text-xs font-semibold text-body transition-colors hover:border-mint hover:text-mint-dark"
+          >
+            {q}
+          </button>
+        ))}
+      </div>
     </form>
   );
 }

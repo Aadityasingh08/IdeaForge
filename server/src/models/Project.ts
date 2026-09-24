@@ -6,6 +6,8 @@ export interface ProjectAttrs {
   rawIdea: string;
   currentStage: Stage;
   brandDNA: BrandDNA;
+  ownerId?: string;
+  shared: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -17,6 +19,9 @@ const ProjectSchema = new Schema<ProjectAttrs>(
     currentStage: { type: String, enum: STAGES, default: 'understand' },
     // BrandDNA is validated by Zod before every write, so it is stored as a flexible document.
     brandDNA: { type: Schema.Types.Mixed, required: true },
+    // Anonymous per-browser owner id — keeps projects private to the browser that made them.
+    ownerId: { type: String, index: true },
+    shared: { type: Boolean, default: false },
   },
   { timestamps: true, minimize: false },
 );

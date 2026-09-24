@@ -23,6 +23,9 @@ export const env = {
     | 'max',
   aiTimeoutMs: Number(process.env.AI_TIMEOUT_MS) || 120_000,
   clientUrls: list(process.env.CLIENT_URL, 'http://localhost:5173'),
+  // Requests per minute per IP: all API calls, and the (paid) AI endpoints.
+  apiRateLimit: Number(process.env.API_RATE_LIMIT) || 300,
+  aiRateLimit: Number(process.env.AI_RATE_LIMIT) || 30,
 };
 
 export const isProduction = env.nodeEnv === 'production';

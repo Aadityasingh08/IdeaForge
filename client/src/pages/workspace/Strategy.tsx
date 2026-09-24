@@ -12,6 +12,10 @@ import { CopyButton } from '../../components/ui/CopyButton';
 import { Sparkle } from '../../components/ui/Logo';
 import { useToast } from '../../components/ui/Toast';
 import { StageFooter, useAutoRun, useCurrentWorkspace } from './shared';
+import { useStore } from '../../state/ProjectContext';
+import { StrategyProgress } from '../../components/brand/StrategyProgress';
+
+const BUILD_ORDER: StrategySection[] = ['positioning', 'personality', 'naming', 'messaging'];
 
 type Tab = 'positioning' | 'value' | 'personality' | 'naming' | 'messaging';
 
@@ -30,7 +34,20 @@ export default function Strategy() {
   const [manual, setManual] = useState(false);
   const tab = (TABS.find((t) => t.key === params.get('tab'))?.key ?? 'positioning') as Tab;
 
-  const build = useCallback(() => run('strategy', () => api.strategy(projectId)), [projectId, run]);
+  const { setProject } = useStore();
+  // Sections are generated one at a time so results appear live; each is saved as it lands.
+  const build = useCallback(
+    () =>
+      run('strategy', async () => {
+        let latest: Project | undefined;
+        for (const section of BUILD_ORDER) {
+          latest = await api.strategy(projectId, section, 'fill');
+          setProject(latest);
+        }
+        return latest!;
+      }),
+    [projectId, run, setProject],
+  );
 
   const dna = project?.brandDNA;
   const hasIdea = !!dna?.idea.problem;
@@ -53,7 +70,7 @@ export default function Strategy() {
         subtitle="We create a strategic foundation for your brand based on your idea and target audience."
       />
 
-      {pending && <LoadingState op="strategy" title="Let’s find the strategic opportunity." />}
+      {pending && <StrategyProgress dna={dna} />}
 
       {!pending && error && (
         <div className="mb-6">

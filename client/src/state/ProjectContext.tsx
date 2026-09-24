@@ -124,6 +124,6 @@ export function useWorkspace(id: string) {
     errorFor,
     clearError: (op: string) => store.clearError(id, op),
     run: <T,>(op: string, fn: () => Promise<T>, pick?: (r: T) => Project) => store.runOp(id, op, fn, pick),
-    patch: (body: { name?: string; edits?: Edit[]; accept?: string[] }) => store.runOp(id, 'patch', () => api.patchProject(id, body)),
+    patch: (body: { name?: string; shared?: boolean; edits?: Edit[]; accept?: string[] }) => store.runOp(id, 'patch', () => api.patchProject(id, body)),
   };
 }

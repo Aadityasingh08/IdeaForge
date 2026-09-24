@@ -42,6 +42,16 @@ IdeaForge behaves like a strategist, not a slot machine:
 - **Visual identity** with palette (click-to-copy HEX), live Google-Fonts typography preview, mood, imagery, shapes, composition and CSS/SVG illustrations
 - **Consistency report + Brand Health** — derived only from checks the AI actually ran (no fake scores)
 - **Brand Kit** with launch-page preview, copy buttons everywhere, **Markdown + JSON download**
+- **Logo generator** — four SVG logo concepts (monogram, spark, orbit, wordmark) built from the brand's name, palette and heading font
+- **Launch mockups** — landing page, Instagram post, business card and app icon rendered in the brand's colours and fonts
+- **PDF brand book** — a designed, print-ready multi-page brand book (Save as PDF)
+- **Live strategy progress** — positioning, personality, naming and messaging appear one by one as each finishes
+- **Out-of-date detection** — change the strategy after generating visuals or the kit and IdeaForge tells you what changed and offers a rebuild
+- **Version history** — a snapshot before every change; restore any point (restores are undoable too)
+- **Shareable brand page** — publish a read-only public page at `/b/:projectId`
+- **Private per browser** — projects are scoped to an anonymous browser id (not a login)
+- **Rate limiting** on the API, with a stricter limit on paid AI endpoints
+- **Automated tests** (Vitest) and a **prompt-quality eval** (`npm run eval`)
 - **Persistence** — refresh anytime; every decision is saved in MongoDB
 - **AI run history** (`AIRun` collection) with status, attempts and duration for every call
 - **Resilient**: Zod validation, one repair retry for malformed output, one retry for transient failures, friendly Retry / Continue-manually states, partial progress never lost
@@ -170,6 +180,7 @@ IdeaForge/
 | `AI_EFFORT` | Optional reasoning effort: `low`/`medium`/`high`/`xhigh`/`max` (default `medium`) |
 | `AI_TIMEOUT_MS` | Optional per-call timeout (default `120000`) |
 | `CLIENT_URL` | Allowed browser origin(s) for CORS, comma-separated |
+| `API_RATE_LIMIT` / `AI_RATE_LIMIT` | Requests per minute per IP for the API / AI endpoints (defaults 300 / 30) |
 | `AI_SIMULATE_FAILURE` | Dev only — comma-separated tasks to force-fail (e.g. `challenge`) to demo Retry |
 
 **client/.env** (copy from `client/.env.example`)
@@ -236,6 +247,8 @@ With `AI_PROVIDER=fallback` (the default) the **DevelopmentFallbackProvider** ru
 
 ## API Endpoints
 
+Every request except `/health` and `/share` sends an `X-IdeaForge-Owner` header — an anonymous id the client keeps in localStorage. It keeps each browser's projects private; it is not authentication.
+
 All responses use `{ "success": true, "data": … }` or `{ "success": false, "error": { "code", "message" } }`.
 Errors: `400` validation · `404` not found · `409` stage prerequisite missing · `502` AI failure · `500` database/internal.
 
@@ -248,8 +261,11 @@ Errors: `400` validation · `404` not found · `409` stage prerequisite missing 
 | PATCH | `/api/projects/:id` | Human edits `{ edits: [{ path, value }], accept: [...] }` (whitelisted paths) |
 | DELETE | `/api/projects/:id` | Delete project and its AI runs |
 | GET | `/api/projects/:id/runs` | AI run history |
+| GET | `/api/projects/:id/versions` | Version snapshots |
+| POST | `/api/projects/:id/versions/:versionId/restore` | Restore a snapshot |
+| GET | `/api/share/:id` | Public read-only brand (only when sharing is on) |
 | POST | `/api/ai/understand` | `{ projectId, rawIdea? }` |
-| POST | `/api/ai/strategy` | `{ projectId, section? }` — omit section for the full strategy, or regenerate one section |
+| POST | `/api/ai/strategy` | `{ projectId, section?, mode? }` — omit section for the full strategy; `mode: "fill"` generates one missing section (live progress); otherwise regenerates that section |
 | POST | `/api/ai/challenge` | `{ projectId }` |
 | POST | `/api/ai/challenge/apply` | `{ action: "accept", projectId, recommendation: { challengeId?, source, target, value } }` or `{ action: "keep_original", projectId, challengeId }` |
 | POST | `/api/ai/challenge/alternatives` | `{ projectId, challengeId }` → exactly 3 strategically different options |
@@ -335,11 +351,24 @@ To demo failure handling, start the server with `AI_SIMULATE_FAILURE=challenge` 
 
 No URLs are hard-coded; everything is configured through environment variables.
 
+## Testing & Prompt Evaluation
+
+```bash
+npm --prefix server test
+```
+
+Unit tests cover idea parsing, AI output validation, BrandDNA editing rules, the challenge engine (including that it returns **no** issues for a strong brand) and the orchestrator's repair/retry logic.
+
+```bash
+npm --prefix server run eval
+```
+
+Runs the whole pipeline on five sample ideas and scores the Challenge engine: are issues **grounded** in quoted BrandDNA text, **actionable**, does the brand **converge** after applying the fixes, and are the alternatives **distinct**. Run it with `AI_PROVIDER=llm` and your key to tune the prompts in `server/src/ai/prompts/` against the real model (this uses API credits). Reports are written to `server/eval-results/`.
+
 ## Future Improvements
 
-- Accounts and team workspaces with shared comments on decisions
-- PDF brand book export and downloadable logo/SVG assets
-- Streaming progress from the model for long stages
-- Competitor research with web search grounding in the Understand and Challenge stages
-- Version history and side-by-side comparison of brand directions
-- Automated evals for challenge quality (precision of flagged issues)
+- Real accounts (Google sign-in) and team workspaces with comments on decisions
+- Competitor research with web search grounding in the Understand and Challenge stages (needs an API key)
+- Side-by-side comparison of two or three competing brand directions
+- Downloadable SVG/PNG logo files and a social-asset pack
+- Token-level streaming for long AI stages

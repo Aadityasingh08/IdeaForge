@@ -14,6 +14,8 @@ const Strategy = lazy(() => import('./pages/workspace/Strategy'));
 const Challenge = lazy(() => import('./pages/workspace/Challenge'));
 const Visual = lazy(() => import('./pages/workspace/Visual'));
 const BrandKit = lazy(() => import('./pages/workspace/BrandKit'));
+const BrandBook = lazy(() => import('./pages/BrandBook'));
+const SharedBrand = lazy(() => import('./pages/SharedBrand'));
 
 function PageFallback() {
   return (
@@ -56,6 +58,8 @@ export default function App() {
                 <Route path="visual" element={<Visual />} />
                 <Route path="brand-kit" element={<BrandKit />} />
               </Route>
+              <Route path="/brand-book/:projectId" element={<BrandBook />} />
+              <Route path="/b/:projectId" element={<SharedBrand />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { AlertTriangle, Check, ChevronDown, Download, FileJson, FileText, XCircle } from 'lucide-react';
+import { AlertTriangle, BookOpen, Check, ChevronDown, Download, FileJson, FileText, XCircle } from 'lucide-react';
 import type { CheckStatus, Consistency, Project } from '../../lib/types';
 import { downloadJSON, downloadMarkdown } from '../../lib/export';
 import { Button } from '../ui/Button';
@@ -118,7 +118,13 @@ export function DownloadMenu({ project, variant = 'primary' }: { project: Projec
     };
   }, [open]);
 
-  const pick = (kind: 'md' | 'json') => {
+  const pick = (kind: 'md' | 'json' | 'pdf') => {
+    if (kind === 'pdf') {
+      // The brand book is a print-ready page; the browser's “Save as PDF” produces the file.
+      window.open(`/brand-book/${project._id}?print=1`, '_blank', 'noopener');
+      setOpen(false);
+      return;
+    }
     if (kind === 'md') downloadMarkdown(project);
     else downloadJSON(project);
     toast(kind === 'md' ? 'IdeaForge-Brand-Kit.md downloaded' : 'IdeaForge-Brand-Kit.json downloaded');
@@ -139,6 +145,13 @@ export function DownloadMenu({ project, variant = 'primary' }: { project: Projec
       </Button>
       {open && (
         <div role="menu" className="absolute right-0 z-40 mt-2 w-64 text-left animate-scale-in rounded-2xl border border-line bg-white p-1.5 shadow-lift">
+          <button role="menuitem" onClick={() => pick('pdf')} className="flex w-full items-start gap-3 rounded-xl p-3 text-left hover:bg-[#f1f7f8]">
+            <BookOpen className="mt-0.5 size-4 text-[#b45309]" aria-hidden />
+            <span>
+              <span className="block text-sm font-semibold text-ink">PDF brand book</span>
+              <span className="block text-xs text-muted">Designed pages · Save as PDF</span>
+            </span>
+          </button>
           <button role="menuitem" onClick={() => pick('md')} className="flex w-full items-start gap-3 rounded-xl p-3 text-left hover:bg-[#f1f7f8]">
             <FileText className="mt-0.5 size-4 text-mint-dark" aria-hidden />
             <span>

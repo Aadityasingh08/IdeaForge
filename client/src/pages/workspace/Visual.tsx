@@ -9,9 +9,13 @@ import { AIReasoning, WhyThis } from '../../components/brand/ai';
 import { AbstractArt, ColorPalette, TypographyPreview } from '../../components/brand/identity';
 import { useToast } from '../../components/ui/Toast';
 import { StageFooter, useAutoRun, useCurrentWorkspace } from './shared';
+import { LogoPicker } from '../../components/brand/logos';
+import { brandPalette } from '../../lib/palette';
+import { visualStaleness } from '../../lib/stale';
+import type { LogoConcept } from '../../lib/types';
 
 export default function Visual() {
-  const { projectId, project, run, isPending, errorFor, clearError } = useCurrentWorkspace();
+  const { projectId, project, run, isPending, errorFor, clearError, patch } = useCurrentWorkspace();
   const [params] = useSearchParams();
   const toast = useToast();
 
@@ -28,6 +32,9 @@ export default function Visual() {
   const v = dna.visual;
   const hexes = v?.colors.map((c) => c.hex) ?? [];
   const brandName = dna.naming?.selectedName ?? project.name;
+  const palette = brandPalette(v);
+  const stale = visualStaleness(dna);
+  const chooseLogo = (concept: LogoConcept) => patch({ edits: [{ path: 'logo.concept', value: concept }] }).then((r) => r && toast('Logo selected'));
 
   return (
     <div>
@@ -67,6 +74,16 @@ export default function Visual() {
 
       {!pending && v && (
         <div className="space-y-8">
+          {stale && (
+            <div className="flex flex-col gap-3 rounded-2xl border border-[#bfdbfe] bg-[#eff6ff] p-4 sm:flex-row sm:items-center sm:justify-between" role="status">
+              <p className="text-sm text-[#1e3a8a]">
+                <span className="font-semibold">Out of date.</span> {stale} Regenerate so your visuals match.
+              </p>
+              <Button size="sm" onClick={generate} icon={<RefreshCw className="size-3.5" />}>
+                Regenerate visuals
+              </Button>
+            </div>
+          )}
           {dna.visualCheck &&
             (dna.visualCheck.consistent ? (
               <div className="flex animate-slide-up items-center gap-3 rounded-2xl border border-[#a7f3d0] bg-[#f0fdf9] px-4 py-3">
@@ -111,6 +128,16 @@ export default function Visual() {
             </h2>
             <TypographyPreview heading={v.typography.heading} body={v.typography.body} brandName={brandName} line={dna.messaging?.tagline ?? brandName} accent={hexes[0]} />
             <p className="mt-3 text-sm leading-relaxed text-body">{v.typography.rationale}</p>
+          </section>
+
+          <section aria-labelledby="logo">
+            <div className="mb-3 flex items-end justify-between gap-3">
+              <h2 id="logo" className="text-lg font-semibold text-ink">
+                Logo
+              </h2>
+              <span className="text-xs text-muted">Generated from your name, palette and type</span>
+            </div>
+            <LogoPicker name={brandName} palette={palette} value={dna.logo?.concept ?? 'monogram'} onChange={chooseLogo} disabled={isPending('patch')} />
           </section>
 
           <section aria-labelledby="mood">

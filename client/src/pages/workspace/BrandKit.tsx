@@ -3,7 +3,8 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Package, PartyPopper, RefreshCw, ShieldCheck } from 'lucide-react';
 import { api } from '../../lib/api';
 import type { Project } from '../../lib/types';
-import { isLight, loadGoogleFont, luminance } from '../../lib/format';
+import { loadGoogleFont } from '../../lib/format';
+import { ShareDialog } from '../../components/brand/ShareDialog';
 import { useStore } from '../../state/ProjectContext';
 import { SectionHeading, Badge, Card } from '../../components/ui/primitives';
 import { Button } from '../../components/ui/Button';
@@ -11,6 +12,9 @@ import { EmptyState, ErrorState, LoadingState } from '../../components/ui/states
 import { CopyButton } from '../../components/ui/CopyButton';
 import { Sparkle } from '../../components/ui/Logo';
 import { AbstractArt, BrandTrait, ColorPalette, TypographyPreview } from '../../components/brand/identity';
+import { BrandHero, LandingPreview, LaunchMockups } from '../../components/brand/showcase';
+import { brandPalette } from '../../lib/palette';
+import { kitStaleness } from '../../lib/stale';
 import { WhyThis } from '../../components/brand/ai';
 import { BrandHealthCheck, BrandSection, ConsistencyReport, DownloadMenu } from '../../components/brand/kit';
 import { useToast } from '../../components/ui/Toast';
@@ -54,21 +58,6 @@ function CopyBlock({ label, text, large = false, children }: { label: string; te
       </div>
       {children ?? <p className={large ? 'text-xl font-bold leading-snug tracking-tight text-ink' : 'text-[15px] leading-relaxed text-ink'}>{text}</p>}
     </Card>
-  );
-}
-
-/** Brand mark generated from the final BrandDNA: the brand's primary colour and heading font. */
-function BrandMark({ name, primary, secondary, font }: { name: string; primary: string; secondary: string; font: string }) {
-  return (
-    <div
-      className="grid size-20 place-items-center rounded-[26px] shadow-lift sm:size-24"
-      style={{ background: `linear-gradient(135deg, ${secondary}, ${primary})` }}
-      aria-hidden
-    >
-      <span className={`text-4xl font-bold sm:text-5xl ${isLight(primary) ? 'text-ink' : 'text-white'}`} style={{ fontFamily: `'${font}', sans-serif` }}>
-        {name.charAt(0).toUpperCase()}
-      </span>
-    </div>
   );
 }
 
@@ -118,6 +107,7 @@ export default function BrandKit() {
             <Button size="sm" variant="ghost" onClick={complete} icon={<RefreshCw className="size-3.5" />}>
               Rebuild
             </Button>
+            <ShareDialog project={project} />
             <DownloadMenu project={project} />
           </>
         ) : undefined
@@ -189,10 +179,10 @@ function KitView({
   const kit = d.brandKit!;
   const v = d.visual;
   const colors = v?.colors ?? [];
-  const primary = colors[0]?.hex ?? '#14B8A6';
-  const secondary = colors[1]?.hex ?? '#22D3EE';
-  // Darkest palette colour carries the tagline so it always reads clearly.
-  const dark = [...colors].sort((a, b) => luminance(a.hex) - luminance(b.hex))[0]?.hex ?? '#0F172A';
+  const palette = brandPalette(v);
+  const concept = d.logo?.concept ?? 'monogram';
+  const stale = kitStaleness(d);
+  const primary = palette.primary;
   const headingFont = v?.typography.heading ?? 'Inter';
   const bodyFont = v?.typography.body ?? 'Inter';
   const complete = project.currentStage === 'complete';
@@ -208,6 +198,17 @@ function KitView({
       {error && (
         <div className="mb-6">
           <ErrorState error={error} onRetry={onRetry} onContinue={clearError} />
+        </div>
+      )}
+
+      {stale && (
+        <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-[#bfdbfe] bg-[#eff6ff] p-4 sm:flex-row sm:items-center sm:justify-between" role="status">
+          <p className="text-sm text-[#1e3a8a]">
+            <span className="font-semibold">Out of date.</span> {stale} Rebuild to bring the kit back in sync.
+          </p>
+          <Button size="sm" onClick={onRetry} icon={<RefreshCw className="size-3.5" />}>
+            Rebuild kit
+          </Button>
         </div>
       )}
 
@@ -242,27 +243,7 @@ function KitView({
         <div className="min-w-0 space-y-14">
           {/* OVERVIEW */}
           <section id="overview" aria-label="Overview" className="scroll-mt-28 space-y-5">
-            <div className="relative overflow-hidden rounded-3xl border border-line bg-white px-6 py-10 text-center shadow-lift sm:px-10 sm:py-14">
-              <div className="absolute inset-0 opacity-60" style={{ background: `radial-gradient(ellipse at top, ${secondary}33, transparent 60%)` }} aria-hidden />
-              <div className="relative flex flex-col items-center">
-                <BrandMark name={kit.name} primary={primary} secondary={secondary} font={headingFont} />
-                <h2 className="mt-6 break-words text-4xl font-bold tracking-tight text-ink sm:text-5xl" style={{ fontFamily: `'${headingFont}', Inter, sans-serif` }}>
-                  {kit.name}
-                </h2>
-                <div className="mt-4 flex items-center gap-1">
-                  <p className="max-w-xl text-xl font-semibold leading-snug sm:text-2xl" style={{ color: dark }}>
-                    {kit.tagline}
-                  </p>
-                  <CopyButton text={kit.tagline} label="Copy tagline" />
-                </div>
-                <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-body">{kit.oneLinePitch}</p>
-                <div className="mt-6 flex gap-1.5" aria-label="Brand palette">
-                  {colors.map((c) => (
-                    <span key={c.hex + c.name} className="size-5 rounded-full ring-2 ring-white" style={{ backgroundColor: c.hex }} title={c.name} />
-                  ))}
-                </div>
-              </div>
-            </div>
+            <BrandHero kit={kit} palette={palette} concept={concept} colors={colors.map((c) => c.hex)} />
 
             <Card className="p-5 sm:p-6">
               <p className="eyebrow mb-2">Brand summary</p>
@@ -427,34 +408,13 @@ function KitView({
 
           {/* LAUNCH */}
           <BrandSection id="launch" eyebrow="Launch assets" title="Ready to ship">
-            <div className="overflow-hidden rounded-3xl border border-line bg-white shadow-lift">
-              <div className="flex items-center gap-1.5 border-b border-line bg-[#f8fafc] px-4 py-2.5" aria-hidden>
-                <span className="size-2.5 rounded-full bg-[#fca5a5]" />
-                <span className="size-2.5 rounded-full bg-[#fcd34d]" />
-                <span className="size-2.5 rounded-full bg-[#86efac]" />
-                <span className="ml-3 truncate text-xs text-muted">{kit.name.toLowerCase().replace(/[^a-z0-9]+/g, '')}.com</span>
-              </div>
-              <div className="relative px-6 py-12 text-center sm:px-12 sm:py-16" style={{ background: `linear-gradient(160deg, ${secondary}1a, #ffffff 55%)` }}>
-                <p className="text-xs font-bold uppercase tracking-[0.18em]" style={{ color: primary, fontFamily: `'${bodyFont}', sans-serif` }}>
-                  {kit.name}
-                </p>
-                <h3 className="mx-auto mt-4 max-w-xl break-words text-3xl font-bold leading-tight tracking-tight text-ink sm:text-4xl" style={{ fontFamily: `'${headingFont}', sans-serif` }}>
-                  {kit.launchHeadline}
-                </h3>
-                <p className="mx-auto mt-4 max-w-lg text-[15px] leading-relaxed text-body" style={{ fontFamily: `'${bodyFont}', sans-serif` }}>
-                  {kit.launchDescription}
-                </p>
-                <span
-                  className={`mt-7 inline-flex rounded-xl px-6 py-3 text-sm font-semibold shadow-soft ${isLight(primary) ? 'text-ink' : 'text-white'}`}
-                  style={{ backgroundColor: primary }}
-                >
-                  {kit.cta}
-                </span>
-              </div>
-            </div>
+            <LandingPreview kit={kit} palette={palette} concept={concept} />
             <p className="mt-2 flex items-center gap-1.5 text-xs text-muted">
               <Sparkle className="size-3" /> Live preview built from your final Brand DNA.
             </p>
+
+            <h3 className="mb-3 mt-8 text-base font-semibold text-ink">Launch mockups</h3>
+            <LaunchMockups kit={kit} palette={palette} concept={concept} />
 
             <div className="mt-5 grid gap-3 md:grid-cols-2">
               <CopyBlock label="Landing page headline" text={kit.launchHeadline} large />

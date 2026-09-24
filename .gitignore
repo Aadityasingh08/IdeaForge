@@ -6,3 +6,4 @@ dist/
 .DS_Store
 client/node_modules/.tmp/
 .claude/
+eval-results/

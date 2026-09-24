@@ -35,7 +35,7 @@ export function buildMarkdown(project: Project): string {
         .join('\n\n') ?? ''
     }`,
     `## Voice\n\n${list(kit?.voice ?? d.messaging?.voice)}\n\n**Tone:** ${val(d.messaging?.tone)}`,
-    `## Visual Identity\n\n${val(kit?.visualSummary)}\n\n**Mood:** ${d.visual?.mood.join(', ') ?? '—'}\n\n${d.visual?.rationale ?? ''}`,
+    `## Visual Identity\n\n${val(kit?.visualSummary)}\n\n**Logo concept:** ${d.logo?.concept ?? 'monogram'}\n\n**Mood:** ${d.visual?.mood.join(', ') ?? '—'}\n\n${d.visual?.rationale ?? ''}`,
     `## Color Palette\n\n${
       d.visual?.colors.length
         ? `| Name | HEX | Usage |\n|---|---|---|\n${d.visual.colors.map((c) => `| ${c.name} | \`${c.hex}\` | ${c.usage} |`).join('\n')}`

@@ -16,6 +16,7 @@ export function createApp() {
     cors({
       origin: (origin, cb) => cb(null, !origin || env.clientUrls.includes(origin)),
       methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+      allowedHeaders: ['Content-Type', 'X-IdeaForge-Owner'],
     }),
   );
   app.use(express.json({ limit: '100kb' }));

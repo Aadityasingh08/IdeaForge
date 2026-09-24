@@ -10,6 +10,7 @@ import { IconButton, ButtonLink } from '../ui/Button';
 import { EmptyState, ErrorState } from '../ui/states';
 import { Tooltip } from '../ui/primitives';
 import { BrandDNAPanel } from './BrandDNAPanel';
+import { VersionHistory } from './VersionHistory';
 
 function StageNavigation({ project, onNavigate }: { project: Project; onNavigate?: () => void }) {
   const statuses = stageStatuses(project.brandDNA);
@@ -191,6 +192,7 @@ export function WorkspaceLayout() {
           <p className="min-w-0 flex-1 truncate text-sm font-semibold text-ink sm:text-[15px]">{project.name}</p>
           <AIModeIndicator />
           <ProgressPill project={project} />
+          <VersionHistory project={project} />
           <span className="grid size-8 shrink-0 place-items-center rounded-full bg-gradient-to-br from-mint to-ice text-xs font-bold text-white ring-2 ring-white" aria-label="Your account" role="img">
             Y
           </span>

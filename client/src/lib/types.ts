@@ -163,6 +163,8 @@ export interface BrandDNA {
   consistency?: Consistency;
   brandKit?: BrandKit;
   finalBrand?: { name: string; tagline: string; summary: string };
+  logo?: { concept: LogoConcept };
+  meta?: { updatedAt: Partial<Record<TrackedSection, string>> };
   decisions: { edited: string[]; accepted: string[] };
 }
 
@@ -171,6 +173,7 @@ export interface Project {
   name: string;
   rawIdea: string;
   currentStage: Stage;
+  shared?: boolean;
   brandDNA: BrandDNA;
   createdAt: string;
   updatedAt: string;
@@ -197,3 +200,20 @@ export interface AIRunSummary {
 }
 
 export type StrategySection = 'positioning' | 'personality' | 'naming' | 'messaging';
+
+export type LogoConcept = 'monogram' | 'spark' | 'orbit' | 'wordmark';
+export type TrackedSection = 'idea' | 'positioning' | 'personality' | 'naming' | 'messaging' | 'visual' | 'logo';
+
+export interface VersionSummary {
+  _id: string;
+  label: string;
+  name: string;
+  currentStage: Stage;
+  createdAt: string;
+}
+
+/** The public, read-only subset of a shared brand. */
+export interface SharedBrand {
+  name: string;
+  brandDNA: Pick<BrandDNA, 'positioning' | 'personality' | 'messaging' | 'visual' | 'logo' | 'brandKit' | 'consistency'>;
+}

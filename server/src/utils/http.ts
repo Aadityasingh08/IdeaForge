@@ -10,6 +10,7 @@ export type ErrorCode =
   | 'AI_INVALID_OUTPUT'
   | 'PRECONDITION_FAILED'
   | 'DATABASE_ERROR'
+  | 'RATE_LIMITED'
   | 'INTERNAL_ERROR';
 
 export class ApiError extends Error {

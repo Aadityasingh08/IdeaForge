@@ -26,7 +26,8 @@ import { brandKitPrompt, consistencyPrompt } from './prompts/brandKit.prompts';
 import { ApiError } from '../utils/http';
 import { logger } from '../utils/logger';
 import { getProjectDoc, serialize, validateIdea, draftName } from '../services/project.service';
-import { addUnique, advanceStage, applyChallengeValue, getPath, releaseSection } from '../services/brandDNA.service';
+import { addUnique, advanceStage, applyChallengeValue, getPath, releaseSection, touch } from '../services/brandDNA.service';
+import { checkpoint } from '../services/version.service';
 
 export type StrategySection = 'positioning' | 'personality' | 'naming' | 'messaging';
 
@@ -150,22 +151,33 @@ Return a corrected response that fixes every problem.`;
       doc.rawIdea = rawIdea.trim();
       if (!doc.brandDNA.naming?.selectedName) doc.name = draftName(rawIdea);
     }
+    if (hasFullIdea(doc.brandDNA.idea)) await checkpoint(doc, 'Before re-analysing the idea');
     const idea = doc.rawIdea;
     // The AI sees only the raw idea — understanding happens before any branding.
     const output = await this.run(doc, 'understand', 'understand', { system: understandPrompt.system, user: understandPrompt.user(idea) }, UnderstandSchema);
     doc.brandDNA.idea = { rawIdea: idea, ...output };
+    touch(doc.brandDNA, 'idea');
     releaseSection(doc.brandDNA, 'idea');
     await this.save(doc, 'understand');
     return serialize(doc);
   }
 
   // ------------------------------------------------------------------ Stage 2
-  async buildStrategy(projectId: string, section?: StrategySection) {
+  async buildStrategy(projectId: string, section?: StrategySection, mode: 'regenerate' | 'fill' = 'regenerate') {
     const doc = await getProjectDoc(projectId);
     this.requireIdea(doc.brandDNA);
 
+    if (section && mode === 'fill') {
+      // Progressive build: generate one missing section (the client calls sections in order for live progress).
+      if (!doc.brandDNA[section]) await this.runStrategySection(doc, section);
+      const complete = !!(doc.brandDNA.positioning && doc.brandDNA.personality && doc.brandDNA.naming && doc.brandDNA.messaging);
+      await this.save(doc, complete ? 'strategy' : undefined);
+      return serialize(doc);
+    }
+
     if (section) {
       // Regenerate only the requested section; everything else stays untouched.
+      await checkpoint(doc, `Before regenerating ${section}`);
       releaseSection(doc.brandDNA, section);
       await this.runStrategySection(doc, section, true);
       await this.save(doc, 'strategy');
@@ -191,6 +203,7 @@ Return a corrected response that fixes every problem.`;
       ? `\n\nThe user asked to REGENERATE the ${section}. Offer a fresh, meaningfully different take that still fits the stored context.`
       : '';
 
+    touch(dna, section);
     switch (section) {
       case 'positioning': {
         const out = await this.run(doc, 'strategy', 'positioning', { system: positioningPrompt.system, user: positioningPrompt.user(dna) + note }, PositioningSchema);
@@ -248,11 +261,15 @@ Return a corrected response that fixes every problem.`;
     if (rec.challengeId && !item) throw new ApiError(404, 'NOT_FOUND', 'Challenge not found.');
     if (rec.target !== 'general' && !rec.value.trim()) throw new ApiError(400, 'VALIDATION_ERROR', 'A replacement value is required.');
 
+    await checkpoint(doc, 'Before accepting an improvement');
     const before = rec.target === 'general' ? null : (getPath(dna, rec.target) as string | undefined) ?? '';
     // Only the affected decision changes — nothing is regenerated.
     applyChallengeValue(dna, rec.target, rec.value.trim());
     if (rec.target === 'naming.selectedName') doc.name = rec.value.trim();
-    if (rec.target !== 'general') dna.decisions.accepted = addUnique(dna.decisions.accepted, rec.target);
+    if (rec.target !== 'general') {
+      dna.decisions.accepted = addUnique(dna.decisions.accepted, rec.target);
+      touch(dna, rec.target);
+    }
 
     const now = new Date().toISOString();
     const resolution = rec.source === 'alternative' ? 'alternative' : 'accepted';
@@ -365,8 +382,10 @@ Return a corrected response that fixes every problem.`;
     this.requireStrategy(dna);
     if (!dna.personality) throw new ApiError(409, 'PRECONDITION_FAILED', 'Define a brand personality first.');
 
+    if (dna.visual) await checkpoint(doc, 'Before regenerating the visual identity');
     const visual = await this.run(doc, 'visual', 'visual', { system: visualPrompt.system, user: visualPrompt.user(dna) }, VisualSchema);
     dna.visual = { ...visual, colors: visual.colors.map((c) => ({ ...c, hex: c.hex.toUpperCase() })) };
+    touch(dna, 'visual');
 
     // Lightweight consistency check before the visual direction is considered final.
     try {
@@ -386,6 +405,7 @@ Return a corrected response that fixes every problem.`;
     this.requireStrategy(dna);
     if (!dna.visual) throw new ApiError(409, 'PRECONDITION_FAILED', 'Create your visual direction first.');
 
+    if (dna.brandKit) await checkpoint(doc, 'Before rebuilding the brand kit');
     const kit = await this.run(doc, 'brand-kit', 'brand-kit', { system: brandKitPrompt.system, user: brandKitPrompt.user(dna) }, BrandKitSchema);
     dna.brandKit = { ...kit, generatedAt: new Date().toISOString() };
     dna.finalBrand = { name: kit.name, tagline: kit.tagline, summary: kit.brandSummary };
