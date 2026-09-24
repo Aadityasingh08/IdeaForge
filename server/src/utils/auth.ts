@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from 'express';
-import { env } from '../config/env';
+import { isAllowedOrigin } from '../config/env';
 import { userFromRequest } from '../services/auth.service';
 import { ApiError } from './http';
 
@@ -29,7 +29,7 @@ export function requireAuth(req: Request, _res: Response, next: NextFunction) {
 export function originCheck(req: Request, _res: Response, next: NextFunction) {
   if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) return next();
   const origin = req.header('origin');
-  if (origin && !env.clientUrls.includes(origin)) {
+  if (origin && !isAllowedOrigin(origin)) {
     return next(new ApiError(403, 'FORBIDDEN', 'This request was blocked for your security.'));
   }
   next();

@@ -7,6 +7,8 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     port: 5173,
+    // Allow temporary public tunnels (cloudflared) to reach the dev server.
+    allowedHosts: ['.trycloudflare.com'],
     proxy: {
       '/api': { target: process.env.VITE_DEV_API_PROXY || 'http://localhost:5000', changeOrigin: true },
     },

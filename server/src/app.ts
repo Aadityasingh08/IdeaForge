@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { originCheck, sessionMiddleware } from './utils/auth';
-import { env } from './config/env';
+import { isAllowedOrigin } from './config/env';
 import { createRouter } from './routes';
 import { errorHandler } from './utils/http';
 import { AIOrchestrator } from './ai/AIOrchestrator';
@@ -16,7 +16,7 @@ export function createApp() {
   app.set('trust proxy', 1);
   app.use(
     cors({
-      origin: (origin, cb) => cb(null, !origin || env.clientUrls.includes(origin)),
+      origin: (origin, cb) => cb(null, !origin || isAllowedOrigin(origin)),
       methods: ['GET', 'POST', 'PATCH', 'DELETE'],
       allowedHeaders: ['Content-Type', 'X-IdeaForge-Owner'],
       credentials: true, // allow the session cookie

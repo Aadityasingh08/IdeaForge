@@ -32,6 +32,15 @@ export const env = {
 
 export const isProduction = env.nodeEnv === 'production';
 
+/** CLIENT_URL entries may use one leading wildcard label, e.g. https://*.trycloudflare.com */
+export function isAllowedOrigin(origin: string): boolean {
+  return env.clientUrls.some((allowed) => {
+    if (!allowed.includes('*')) return allowed === origin;
+    const [scheme, host] = allowed.split('://*');
+    return origin.startsWith(scheme + '://') && origin.endsWith(host) && !origin.slice(scheme.length + 3, -host.length).includes('/');
+  });
+}
+
 const sameSite = (process.env.COOKIE_SAMESITE || (isProduction ? 'none' : 'lax')).toLowerCase();
 
 /** Session cookie settings. Production defaults suit a frontend and API on different domains. */
