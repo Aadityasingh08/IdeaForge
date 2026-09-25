@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Package, PartyPopper, RefreshCw, ShieldCheck } from 'lucide-react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Package, PartyPopper, Presentation, RefreshCw, ShieldCheck, Sparkles } from 'lucide-react';
 import { api } from '../../lib/api';
 import type { Project } from '../../lib/types';
 import { loadGoogleFont } from '../../lib/format';
@@ -17,6 +17,10 @@ import { brandPalette } from '../../lib/palette';
 import { kitStaleness } from '../../lib/stale';
 import { WhyThis } from '../../components/brand/ai';
 import { BrandHealthCheck, BrandSection, ConsistencyReport, DownloadMenu } from '../../components/brand/kit';
+import { CompetitorMatrix } from '../../components/brand/CompetitorMatrix';
+import { AudienceSimulator } from '../../components/brand/AudienceSimulator';
+import { SocialLaunchStudio } from '../../components/brand/SocialLaunchStudio';
+import { ConfettiBlast } from '../../components/ui/ConfettiBlast';
 import { useToast } from '../../components/ui/Toast';
 import { useAutoRun, useCurrentWorkspace } from './shared';
 
@@ -26,6 +30,9 @@ const NAV = [
   { id: 'visual', label: 'Visual Identity' },
   { id: 'messaging', label: 'Messaging' },
   { id: 'launch', label: 'Launch Assets' },
+  { id: 'market-radar', label: 'Market Moat' },
+  { id: 'audience-simulator', label: 'Audience Simulator' },
+  { id: 'social-studio', label: 'Social Studio' },
 ];
 const NAV_IDS = NAV.map((n) => n.id);
 
@@ -104,6 +111,12 @@ export default function BrandKit() {
       actions={
         kit && !pending ? (
           <>
+            <Link
+              to={`/pitch-deck/${project._id}`}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-teal-600 px-3.5 py-1.5 text-xs font-bold text-white shadow-soft hover:bg-teal-500 transition-colors"
+            >
+              <Presentation className="size-3.5" /> Pitch Deck
+            </Link>
             <Button size="sm" variant="ghost" onClick={complete} icon={<RefreshCw className="size-3.5" />}>
               Rebuild
             </Button>
@@ -430,11 +443,38 @@ function KitView({
             </div>
           </BrandSection>
 
-          <div className="flex flex-col items-center gap-3 rounded-3xl bg-ink px-6 py-10 text-center text-white">
-            <Sparkle className="size-8" />
-            <p className="text-xl font-bold tracking-tight">Your complete brand is ready.</p>
-            <p className="text-sm text-[#cbd5e1]">Take it with you as Markdown or structured JSON.</p>
-            <div className="mt-2">
+          {/* MARKET MOAT & 2X2 MATRIX */}
+          <section id="market-radar" aria-label="Market Moat" className="scroll-mt-28">
+            <CompetitorMatrix dna={d} />
+          </section>
+
+          {/* AUDIENCE SIMULATOR */}
+          <section id="audience-simulator" aria-label="Audience Simulator" className="scroll-mt-28">
+            <AudienceSimulator dna={d} />
+          </section>
+
+          {/* SOCIAL LAUNCH STUDIO */}
+          <section id="social-studio" aria-label="Social Studio" className="scroll-mt-28">
+            <SocialLaunchStudio dna={d} />
+          </section>
+
+          {/* FINISH & PITCH DECK CTA */}
+          <div className="flex flex-col items-center gap-4 rounded-3xl bg-gradient-to-br from-slate-900 via-ink to-slate-950 px-6 py-12 text-center text-white shadow-lift border border-teal-500/20">
+            <ConfettiBlast trigger={complete} />
+            <div className="rounded-2xl bg-teal-500/20 p-3 text-teal-300">
+              <Sparkles className="size-8 animate-pulse" />
+            </div>
+            <h3 className="text-2xl font-black tracking-tight">Your complete brand ecosystem is ready to launch.</h3>
+            <p className="text-sm text-slate-300 max-w-md">
+              Present your story to investors, judges and customers with the interactive 10-slide deck, or take everything with you.
+            </p>
+            <div className="mt-3 flex flex-wrap items-center justify-center gap-3">
+              <Link
+                to={`/pitch-deck/${project._id}`}
+                className="inline-flex items-center gap-2 rounded-xl bg-teal-500 px-5 py-2.5 text-sm font-bold text-white shadow-lift hover:bg-teal-400 transition-all hover:scale-105"
+              >
+                <Presentation className="size-4" /> Present Pitch Deck (Slides) →
+              </Link>
               <DownloadMenu project={project} variant="mint" />
             </div>
           </div>

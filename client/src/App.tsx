@@ -18,6 +18,7 @@ const Challenge = lazy(() => import('./pages/workspace/Challenge'));
 const Visual = lazy(() => import('./pages/workspace/Visual'));
 const BrandKit = lazy(() => import('./pages/workspace/BrandKit'));
 const BrandBook = lazy(() => import('./pages/BrandBook'));
+const PitchDeck = lazy(() => import('./pages/PitchDeck'));
 const SharedBrand = lazy(() => import('./pages/SharedBrand'));
 const Login = lazy(() => import('./pages/auth/Login'));
 const Signup = lazy(() => import('./pages/auth/Signup'));
@@ -85,6 +86,7 @@ export default function App() {
                 <Route path="brand-kit" element={<BrandKit />} />
               </Route>
               <Route path="/brand-book/:projectId" element={priv(<BrandBook />)} />
+              <Route path="/pitch-deck/:projectId" element={priv(<PitchDeck />)} />
               <Route path="/b/:projectId" element={<SharedBrand />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

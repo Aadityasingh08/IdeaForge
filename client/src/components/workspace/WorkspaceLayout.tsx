@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, Navigate, Outlet, useLocation, useParams } from 'react-router-dom';
-import { ArrowLeft, Check, FolderOpen, Menu, X } from 'lucide-react';
+import { ArrowLeft, Check, FolderOpen, Menu, Presentation, X } from 'lucide-react';
 import { useStore, useWorkspace } from '../../state/ProjectContext';
 import { STAGES, completedCount, stageStatuses } from '../../lib/stages';
 import type { Project } from '../../lib/types';
@@ -70,6 +70,20 @@ function StageNavigation({ project, onNavigate }: { project: Project; onNavigate
           <Sparkle className="size-5" />
           <p className="mt-2 text-sm font-semibold">Your brand is ready.</p>
           <p className="mt-0.5 text-xs text-[#94a3b8]">All five stages complete.</p>
+          <div className="mt-3 flex flex-col gap-1.5">
+            <Link
+              to={`/pitch-deck/${project._id}`}
+              className="flex items-center justify-center gap-1.5 rounded-xl bg-teal-500 px-3 py-2 text-xs font-bold text-white shadow-xs hover:bg-teal-400 transition-colors"
+            >
+              <Presentation className="size-3.5" /> Pitch Deck (Slides)
+            </Link>
+            <Link
+              to={`/brand-book/${project._id}`}
+              className="flex items-center justify-center gap-1.5 rounded-xl bg-white/10 px-3 py-2 text-xs font-semibold text-white hover:bg-white/20 transition-colors"
+            >
+              View Brand Book
+            </Link>
+          </div>
         </div>
       )}
     </nav>
@@ -193,6 +207,13 @@ export function WorkspaceLayout() {
           <p className="min-w-0 flex-1 truncate text-sm font-semibold text-ink sm:text-[15px]">{project.name}</p>
           <AIModeIndicator />
           <ProgressPill project={project} />
+          <Link
+            to={`/pitch-deck/${project._id}`}
+            className="hidden sm:inline-flex items-center gap-1.5 rounded-xl bg-teal-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-teal-500 transition-colors shadow-xs"
+            title="Launch Investor Pitch Deck"
+          >
+            <Presentation className="size-3.5" /> Pitch Deck
+          </Link>
           <VersionHistory project={project} />
           <UserMenu />
         </div>

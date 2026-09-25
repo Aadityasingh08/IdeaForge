@@ -5,10 +5,26 @@ import { logger } from './utils/logger';
 import { AIRun } from './models/AIRun';
 
 async function main() {
-  await connectDatabase();
-  // Runs interrupted by a restart can never finish — record them honestly as failed.
-  const stale = await AIRun.updateMany({ status: 'running' }, { status: 'failed', error: 'Interrupted by a server restart.' });
-  if (stale.modifiedCount) logger.warn(`Marked ${stale.modifiedCount} interrupted AI run(s) as failed`);
+  try {
+    await connectDatabase();
+    const stale = await AIRun.updateMany({ status: 'running' }, { status: 'failed', error: 'Interrupted by a server restart.' });
+    if (stale.modifiedCount) logger.warn(`Marked ${stale.modifiedCount} interrupted AI run(s) as failed`);
+  } catch (err) {
+    logger.warn(`MongoDB not connected yet (${err instanceof Error ? err.message : err}).`);
+    logger.warn('Please provide a MongoDB connection string in server/.env or start local MongoDB.');
+    logger.info('Server is running and will automatically connect when MongoDB is ready.');
+
+    const retryTimer = setInterval(async () => {
+      try {
+        await connectDatabase();
+        logger.info('MongoDB successfully connected in background!');
+        clearInterval(retryTimer);
+      } catch {
+        // Silently retry
+      }
+    }, 5000);
+  }
+
   const app = createApp();
   const server = app.listen(env.port, () => logger.info(`IdeaForge API listening on http://localhost:${env.port}`));
   server.on('error', (err: NodeJS.ErrnoException) => {
