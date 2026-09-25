@@ -12,7 +12,7 @@ export default function Login() {
   const next = safeNext(params.get('next'));
   const { status, setUser } = useAuth();
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(() => params.get('email') || '');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(true);
   const [error, setError] = useState<string | null>(null);

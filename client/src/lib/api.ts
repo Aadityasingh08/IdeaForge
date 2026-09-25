@@ -39,19 +39,29 @@ async function request<T>(path: string, init?: RequestInit & { json?: unknown })
   }
 
   let payload: { success: boolean; data?: T; error?: { code: string; message: string } } | null = null;
-  try {
-    payload = await res.json();
-  } catch {
-    // Proxy/gateway errors (backend down) come back as non-JSON.
-    if (res.status >= 500) throw new NetworkError();
+  const contentType = res.headers.get('content-type') || '';
+  if (contentType.includes('application/json')) {
+    try {
+      payload = await res.json();
+    } catch {
+      payload = null;
+    }
   }
+
   if (res.status === 401 && !path.startsWith('/auth/')) {
     // Session expired or signed out elsewhere — let the app send the user to log in.
     window.dispatchEvent(new Event('ideaforge:unauthorized'));
   }
   if (!res.ok || !payload?.success) {
     if (res.status === 502 && !payload) throw new NetworkError();
-    throw new ApiError(res.status, payload?.error?.code ?? 'UNKNOWN', payload?.error?.message ?? 'Something went wrong.');
+    const fallbackMsg = res.status === 409
+      ? 'An account with this email already exists. Try logging in.'
+      : res.status === 401
+      ? 'Invalid email or password. Please try again.'
+      : !payload && res.status === 200
+      ? 'Unexpected server response. Please try again.'
+      : 'Something went wrong. Please try again.';
+    throw new ApiError(res.status, payload?.error?.code ?? 'UNKNOWN', payload?.error?.message ?? fallbackMsg);
   }
   return payload.data as T;
 }

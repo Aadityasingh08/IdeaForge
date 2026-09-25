@@ -1,8 +1,9 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "npm --prefix client install && npm --prefix client run build",
-  "outputDirectory": "client/dist",
   "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://ideaforge-api-v7sv.onrender.com/api/:path*"
+    },
     {
       "source": "/(.*)",
       "destination": "/index.html"

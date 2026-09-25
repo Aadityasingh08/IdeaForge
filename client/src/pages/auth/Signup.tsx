@@ -64,6 +64,14 @@ export default function Signup() {
       )}
       <form onSubmit={submit} noValidate className="space-y-4">
         <FormError message={error} />
+        {error && (error.toLowerCase().includes('already exists') || error.toLowerCase().includes('log in')) && (
+          <div className="flex items-center justify-between rounded-xl border border-mint/20 bg-mint-50/70 p-3 text-xs text-ink-heading">
+            <span>Already registered with this email?</span>
+            <Link to={`/login?email=${encodeURIComponent(email.trim())}${params.get('next') ? `&next=${encodeURIComponent(next)}` : ''}`} className="font-semibold text-mint-dark hover:underline">
+              Go to Log in &rarr;
+            </Link>
+          </div>
+        )}
         <Input label="Name" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} maxLength={60} autoFocus />
         <Input label="Email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
         <div>
