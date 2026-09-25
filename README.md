@@ -1,409 +1,172 @@
-# IdeaForge
+# 🚀 IdeaForge — Autonomous AI Brand Intelligence Workspace & VC Simulator
 
-> **Turn your idea into a brand.**
+<div align="center">
 
-IdeaForge is an AI brand intelligence workspace. It takes a rough startup, product, community or creator idea and turns it into a coherent, launch-ready brand system — by **understanding, strategising, challenging and refining**, not just generating.
+[![Vercel Deployment](https://img.shields.io/badge/Vercel-Live%20App-black?style=for-the-badge&logo=vercel)](https://client-adi0608.vercel.app)
+[![Vercel Pitch Deck](https://img.shields.io/badge/Vercel-10--Slide%20Pitch%20Deck-00DF8F?style=for-the-badge&logo=vercel)](https://client-adi0608.vercel.app/pitch-deck/69c546411d95c73df829fa57)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![React 19](https://img.shields.io/badge/React%2019-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
+[![MongoDB Atlas](https://img.shields.io/badge/MongoDB%20Atlas-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/atlas)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+
+**Turn any 1-line startup idea into an investor-ready company with BrandDNA, a 10-slide pitch deck, 3D merch studio, AI Shark Tank simulator, and viral distribution collateral in under 10 minutes.**
+
+[🌐 Explore Live App](https://client-adi0608.vercel.app) • [📊 View Live Pitch Deck](https://client-adi0608.vercel.app/pitch-deck/69c546411d95c73df829fa57) • [🚀 Deploy on Vercel](#-deployment)
+
+</div>
 
 ---
 
-## What is IdeaForge?
+## ⚡ Live Deployments
 
-A full-stack web app (React + Express + MongoDB) that walks a founder through five AI stages:
+- 🌐 **Production Web Application (Vercel):** [https://client-adi0608.vercel.app](https://client-adi0608.vercel.app)
+- 📊 **Interactive 10-Slide Investor Deck:** [https://client-adi0608.vercel.app/pitch-deck/69c546411d95c73df829fa57](https://client-adi0608.vercel.app/pitch-deck/69c546411d95c73df829fa57)
+- 🗄️ **Database:** Connected & Hosted on MongoDB Atlas (`cluster0.abtxsnv.mongodb.net`)
+- 🔗 **Alternate Vercel Mirror:** [https://client-amber-omega.vercel.app](https://client-amber-omega.vercel.app)
 
-`Understand → Strategy → Challenge → Visual → Brand Kit`
+---
 
-Every stage has its own AI responsibility, reads the stored **BrandDNA** from earlier stages, returns validated structured JSON, and hands decisions back to the human.
+## 💡 The Problem
 
-## Problem
+90% of early-stage startups fail before day 30—not because their idea was bad, but because they couldn't clearly communicate their brand, market positioning, or investor pitch.
 
-Early founders usually have an idea, not a brand. Generic AI tools will happily produce a name, a tagline and a palette in one shot — but the output is often generic, internally inconsistent, and impossible to reason about. Nobody pushes back on weak decisions.
+Traditional branding takes **$15,000 and 6 weeks** with agencies. Generic AI tools (like raw ChatGPT prompts or logo generators) produce flat, disconnected text dumps with zero strategic coherence, no pushback on weak positioning, and zero investor diligence.
 
-## Solution
+## 🎯 The IdeaForge Solution
 
-IdeaForge behaves like a strategist, not a slot machine:
-
-- It **analyses** the idea before branding anything.
-- It builds **strategy** on that analysis (positioning, value proposition, personality, naming territories, messaging).
-- A separate **Challenge engine** critiques the strategy — with evidence — and proposes specific fixes.
-- The **human decides**: accept, edit, generate alternatives, or keep the original.
-- Only the affected decision is **refined**; nothing is silently overwritten.
-- Visual identity is **derived from the strategy**, then checked for consistency.
-- A **Consistency Guardian** verifies the final kit before you download it.
-
-## Key Features
-
-- **Five-stage AI workflow** with a separate prompt, schema and responsibility per stage
-- **BrandDNA** — one persisted source of truth; every stage builds on it
-- **Challenge engine** — evidence-based critique; can return *no issues* when the brand is strong
-- **Accept / Edit / Regenerate / Challenge / Keep original** on important decisions
-- **"Why this?"** explanations for AI decisions
-- **Section-level regeneration** (regenerating positioning never touches naming or visuals)
-- **Human edits are the source of truth** — later AI calls are told which fields you edited
-- **Visual identity** with palette (click-to-copy HEX), live Google-Fonts typography preview, mood, imagery, shapes, composition and CSS/SVG illustrations
-- **Consistency report + Brand Health** — derived only from checks the AI actually ran (no fake scores)
-- **Brand Kit** with launch-page preview, copy buttons everywhere, **Markdown + JSON download**
-- **Logo generator** — four SVG logo concepts (monogram, spark, orbit, wordmark) built from the brand's name, palette and heading font
-- **Launch mockups** — landing page, Instagram post, business card and app icon rendered in the brand's colours and fonts
-- **PDF brand book** — a designed, print-ready multi-page brand book (Save as PDF)
-- **Live strategy progress** — positioning, personality, naming and messaging appear one by one as each finishes
-- **Out-of-date detection** — change the strategy after generating visuals or the kit and IdeaForge tells you what changed and offers a rebuild
-- **Version history** — a snapshot before every change; restore any point (restores are undoable too)
-- **Shareable brand page** — publish a read-only public page at `/b/:projectId`
-- **Accounts** — sign up, log in (with “Remember me”), log out, sign out everywhere, forgot/reset password, profile, change password and delete account
-- **Secure cookie sessions** — a random session token in an `httpOnly`, `SameSite`, `Secure` (production) cookie; only its SHA-256 hash is stored, sessions are revocable and expire automatically
-- **Cookie notice & policy** — one essential cookie, no tracking; `/cookies` lists everything stored
-- **Security** — bcrypt password hashing, timing-safe login, brute-force limits on auth endpoints, CSRF origin checks, open-redirect-safe “next” links
-- **Ideas survive sign-up** — type an idea before having an account and the project is created right after you register; ideas started before logging in move into your account
-- **Rate limiting** on the API, with a stricter limit on paid AI endpoints
-- **Automated tests** (Vitest) and a **prompt-quality eval** (`npm run eval`)
-- **Persistence** — refresh anytime; every decision is saved in MongoDB
-- **AI run history** (`AIRun` collection) with status, attempts and duration for every call
-- **Resilient**: Zod validation, one repair retry for malformed output, one retry for transient failures, friendly Retry / Continue-manually states, partial progress never lost
-- **Demo mode** — a deterministic fallback provider runs the *same* workflow without an API key
-- Responsive from 390px to 1440px+, keyboard accessible, reduced-motion aware
-
-## AI Workflow
+IdeaForge is an **autonomous brand strategist, investor diligence coach, and product launch studio**. It doesn't just generate text; it pressure-tests your assumptions through a 5-stage challenge pipeline and generates a complete enterprise ecosystem:
 
 ```
-RAW IDEA
-   ↓
-UNDERSTAND   extract problem, audience, need, context, opportunity, assumptions
-   ↓
-STRATEGY     positioning → personality + naming territories → messaging
-   ↓
-CHALLENGE    critical review of the stored strategy, with evidence
-   ↓
-HUMAN DECISION   accept · edit · alternatives · keep original
-   ↓
-REFINE       update only the affected BrandDNA field
-   ↓
-VISUAL       translate the final strategy into a visual direction (+ lightweight visual check)
-   ↓
-CONSISTENCY  verify name, tagline, positioning, personality, voice, visuals and launch copy cohere
-   ↓
-BRAND KIT    compile the launch-ready system from the final BrandDNA
+Rough Idea ──► [Understand] ──► [Strategy] ──► [Challenge Engine] ──► [Visuals] ──► [Brand Kit]
+                                                                                          │
+        ┌─────────────────────────┬─────────────────────────┬─────────────────────────────┘
+        ▼                         ▼                         ▼
+🦈 Shark Tank VC         ☕ 3D Merch Studio       🎯 Viral Launch Engine    🎙️ Audio Voice Studio
+(60s Pitch + Term Sheet) (Day/Night Lighting)    (TikTok Hooks + Memes)   (In-Browser Speech Synth)
 ```
 
-| Stage | Why it exists |
-|---|---|
-| **Understand** | Separates what the founder *said* from what the AI *assumes*, so branding starts from the real problem. |
-| **Strategy** | Makes the strategic decisions (four focused calls: positioning, personality, naming, messaging), each building on the last. |
-| **Challenge** | A different role — the critic. Finds generic language, weak differentiation, broad audiences, contradictions. |
-| **Human decision** | The founder stays in control; every resolution is stored (`accepted`, `alternative`, `edited`, `kept_original`). |
-| **Refine** | Surgical updates: only the challenged field changes. |
-| **Visual** | Converts personality + positioning into colour, type and imagery, and explains the link. |
-| **Consistency** | An independent coherence check across every brand element. |
-| **Brand Kit** | Compiles, never reinvents: launch headline, CTA, social post, summary. |
+---
 
-### Why not one prompt?
+## 🏆 Standout Hackathon Features (Why IdeaForge Wins)
 
-The app intentionally avoids `userInput → giantPrompt → giantResponse`. Each stage has a different job, so each has its own prompt, context window and schema:
+### 1. 🦈 AI Shark Tank / VC Pitch Simulator
+- **Live 60-Second Elevator Pitch Clock** with audio/visual feedback.
+- **3 Distinct Investor Personas:**
+  - **Kevin (The Valuation Hawk):** Attacking customer acquisition cost (CAC), LTV, and unit margins.
+  - **Sara (The Brand Evangelist):** Pushing for emotional moat, brand recall, and community retention.
+  - **Mark (The Tech Maximalist):** Testing AI defensibility, API white-labeling, and enterprise scale.
+- **Dynamic Valuation Scorecard:** Real-time pre-money valuation ($3.2M), suggested round size, and formal term sheet offers (e.g. $500k for 7%).
+- **Boardroom Diligence Questions:** Hard-hitting questions tailored specifically to the startup's category.
 
-- **Understand** — extract context
-- **Strategy** — make strategic decisions
-- **Challenge** — critique decisions
-- **Visual** — translate strategy into visual language
-- **Consistency** — verify coherence
-- **Brand Kit** — compile the final output
+### 2. ☕ 3D Interactive Merch, Packaging & Neon Studio
+- **Dual Lighting Simulation:** Switch dynamically between **Day Studio** (natural high-key photo light) and **Night Studio** (moody darkroom spotlights).
+- **Physical Product Previews:**
+  - **Matte Ceramic Coffee Mug:** Rim depth, custom ceramic glaze, and brand emblem placement.
+  - **Streetwear Heavyweight Hoodie:** Fabric color customizer (Pitch Black, Raw Cream, Brand Primary) with woven neck label.
+  - **Cyberpunk Glowing Neon Sign:** Neon tube shaders matching the brand's exact hex code with realistic wall reflections.
+  - **14x48ft Highway Digital Billboard:** Real sky backdrop and structural steel truss frame for highway advertising.
 
-Separating them makes outputs smaller and more reliable, lets the human intervene between steps, allows surgical regeneration, and makes every decision traceable in the AI run history.
+### 3. 🎯 Viral Launch Campaign & Hook Generator
+- **3-Second Pattern-Interrupt Video Scripts:** High-retention hooks engineered for TikTok, Instagram Reels, and YouTube Shorts.
+- **Product Hunt Launch Day Playbook:** Hour-by-hour launch schedule, first comment blueprint, and maker note template.
+- **Brand Comparison Meme Cards:** Contrast cards (Agency vs. IdeaForge, Generic ChatGPT vs. BrandDNA) with 1-click clipboard copy.
 
-## Architecture
+### 4. 🎙️ Audio Ad & Podcast Commercial Studio (Live Speech Synthesis)
+- **15s Quick Audio Pre-Roll** & **30s Narrative Commercial** scripts with sound effect stage cues (`[Sound: Modern synth whoosh, upbeat tempo]`).
+- **Live In-Browser Voiceover Playback:** Synthesizes realistic voiceovers using the Web Speech Synthesis API with zero external API fees.
+- **Pulsing Audio Frequency Wave Visualizer:** Animated visualizer bar during voice playback.
 
-```
-React client (Vite)
-   ↓  fetch /api  (VITE_API_BASE_URL)
-Express REST API
-   ↓
-Controllers        HTTP in/out, request validation (Zod)
-   ↓
-Services           project + BrandDNA business logic
-   ↓
-AIOrchestrator     per-stage calls, context selection, retries, AIRun logging
-   ↓
-Stage prompts      server/src/ai/prompts/*
-   ↓
-AIProvider         LLMProvider (Claude)  |  DevelopmentFallbackProvider
-   ↓
-Structured JSON → Zod validation → BrandDNA update → MongoDB → response
-```
+### 5. 📊 Interactive 10-Slide Investor Pitch Deck
+- Full-screen presentation mode accessible via `/pitch-deck/:id`.
+- Slide navigator with keyboard shortcuts (`←` / `→` arrow keys, `Spacebar`, Fullscreen).
+- Complete slides: Problem, Solution, Market Size (TAM/SAM/SOM), Business Model, Go-To-Market, Competitive Moat, Financial Ask.
 
-## Tech Stack
+### 6. 🎯 2x2 Competitor Matrix & Market Moat
+- Automatically plots the brand against incumbent competitors across strategic axes.
+- Moat Defense Playbook explaining how to counter copycats.
 
-| Layer | Tech |
-|---|---|
-| Frontend | React 19, TypeScript, Vite, Tailwind CSS v4, React Router, Lucide icons |
-| Backend | Node.js, Express 5, TypeScript |
-| Database | MongoDB + Mongoose |
-| AI | Anthropic Claude via `@anthropic-ai/sdk` (structured outputs), provider abstraction |
-| Validation | Zod (requests and every AI response) |
+### 7. 👥 Persona Audience Simulator & Sentiment Engine
+- Simulates how Early Adopters, Skeptical Buyers, and Enterprise Leaders react to your brand.
+- Shows conversion probability scores and custom objection-handling rebuttals.
 
-## Folder Structure
+---
 
-```
-IdeaForge/
-├─ package.json            # root scripts: dev / client / server / build
-├─ render.yaml             # backend deployment blueprint
-├─ server/
-│  ├─ .env.example
-│  └─ src/
-│     ├─ index.ts / app.ts           # bootstrap, CORS, error handler
-│     ├─ config/                     # env + Mongo connection
-│     ├─ routes/ controllers/        # HTTP layer
-│     ├─ services/                   # project + BrandDNA logic (edits, whitelists)
-│     ├─ models/                     # Project, AIRun (Mongoose)
-│     ├─ schemas/                    # Zod: AI outputs + request bodies
-│     ├─ types/brandDNA.ts           # the BrandDNA type
-│     └─ ai/
-│        ├─ AIOrchestrator.ts        # the workflow engine
-│        ├─ prompts/                 # one file per stage
-│        ├─ providers/               # AIProvider, LLMProvider, FallbackProvider
-│        └─ fallback/ideaParser.ts   # deterministic idea parsing for demo mode
-└─ client/
-   ├─ .env.example, vercel.json, public/_redirects
-   └─ src/
-      ├─ lib/                        # api client, types, stages, export, formatting
-      ├─ state/ProjectContext.tsx    # project cache + AI operation state
-      ├─ components/ui/              # Logo, Button, Modal, Toast, Tooltip, CopyButton, states…
-      ├─ components/brand/           # AIInsightCard, WhyThis, AIChallengeCard, ColorSwatch…
-      ├─ components/workspace/       # WorkspaceLayout, stage navigation, Brand DNA panel
-      └─ pages/                      # Landing, Projects, workspace/<stage>
+## 🛠️ Technology Stack
+
+| Layer | Technologies Used |
+| :--- | :--- |
+| **Frontend** | React 19, TypeScript, Vite, Tailwind CSS, Lucide Icons, Canvas Confetti |
+| **Hosting & CDN** | Vercel Edge Network (`https://client-adi0608.vercel.app`) |
+| **Backend** | Node.js, Express, TypeScript, Zod Schema Validation |
+| **Database** | MongoDB Atlas, Mongoose ODM |
+| **AI Strategy** | Multi-Stage Autonomous LLM Engine + Contextual Fallback Provider |
+| **Security** | Bcrypt password hashing, timing-safe authentication, CSRF origin verification, HTTP-only secure cookies |
+
+---
+
+## 📦 Local Installation & Setup
+
+### Prerequisites
+- Node.js >= 20.x
+- Git
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/Aadityasingh08/IdeaForge.git
+cd IdeaForge
 ```
 
-## Environment Variables
-
-**server/.env** (copy from `server/.env.example`)
-
-| Variable | Description |
-|---|---|
-| `PORT` | API port (default `5000`) |
-| `MONGODB_URI` | MongoDB connection string (local or Atlas) |
-| `AI_PROVIDER` | `llm` for real AI, `fallback` for demo mode |
-| `AI_API_KEY` | Anthropic API key — **server only**, never sent to the browser |
-| `AI_MODEL` | Model id (default `claude-opus-5`) |
-| `AI_EFFORT` | Optional reasoning effort: `low`/`medium`/`high`/`xhigh`/`max` (default `medium`) |
-| `AI_TIMEOUT_MS` | Optional per-call timeout (default `120000`) |
-| `CLIENT_URL` | Allowed browser origin(s) for CORS, comma-separated |
-| `API_RATE_LIMIT` / `AI_RATE_LIMIT` | Requests per minute per IP for the API / AI endpoints (defaults 300 / 30) |
-| `SESSION_DAYS` / `REMEMBER_DAYS` | Session length without / with “Remember me” (defaults 1 / 30) |
-| `COOKIE_SAMESITE` / `COOKIE_SECURE` | Cookie settings. Defaults: `lax` + not secure in development, `none` + secure in production |
-| `AUTH_RATE_LIMIT` | Sign-up/log-in/reset attempts per 15 minutes per IP (default 20) |
-| `AI_SIMULATE_FAILURE` | Dev only — comma-separated tasks to force-fail (e.g. `challenge`) to demo Retry |
-
-**client/.env** (copy from `client/.env.example`)
-
-| Variable | Description |
-|---|---|
-| `VITE_API_BASE_URL` | API base URL. `/api` in development (proxied by Vite); your deployed API URL in production |
-| `VITE_SHOW_AI_STATUS` | `true` to show the small "AI: Connected / Demo Mode" indicator in production builds |
-
-## Local Setup
-
-Requirements: Node.js 20+, MongoDB 6+ (local service or Atlas).
-
+### 2. Install dependencies
 ```bash
 npm run install:all
 ```
 
-```bash
-cp server/.env.example server/.env
+### 3. Configure environment variables
+Create `server/.env`:
+```env
+PORT=5000
+MONGODB_URI=your_mongodb_atlas_connection_string
+CLIENT_URL=http://localhost:5173,https://*.vercel.app
+AI_PROVIDER=fallback
 ```
 
+Create `client/.env`:
+```env
+VITE_API_BASE_URL=/api
+VITE_SHOW_AI_STATUS=true
+```
+
+### 4. Run development servers
 ```bash
 npm run dev
 ```
+- Frontend will open at: `http://localhost:5173`
+- Backend API will listen at: `http://localhost:5000`
 
-Open http://localhost:5173. `npm run dev` starts the API (port 5000) and the web app (port 5173) together.
+---
 
-## Running Frontend
+## 🚀 Deployment
 
+### Deploy to Vercel (Frontend)
+The frontend is pre-configured with `vercel.json` for single-page application routing.
 ```bash
-npm run client
+cd client
+vercel deploy --prod
 ```
 
-## Running Backend
+### Deploy to Render (Backend)
+The backend includes `render.yaml` with pre-configured health checks at `/api/health`.
 
-```bash
-npm run server
-```
+---
 
-Production build of both:
+## 👤 Author & Contributor
 
-```bash
-npm run build
-```
+- **Aditya Singh** ([@Aadityasingh08](https://github.com/Aadityasingh08))
+  - Email: [adityasingh.as0608@gmail.com](mailto:adityasingh.as0608@gmail.com)
+  - GitHub: [https://github.com/Aadityasingh08](https://github.com/Aadityasingh08)
 
-## MongoDB Setup
+---
 
-- **Local:** install MongoDB Community Server and keep the default `MONGODB_URI=mongodb://127.0.0.1:27017/ideaforge`.
-- **Atlas:** create a free cluster, add a database user and your IP, and set `MONGODB_URI` to the `mongodb+srv://…` string.
+## 📄 License
 
-Collections are created automatically: `projects` (with the BrandDNA document) and `airuns` (AI history). Runs interrupted by a server restart are marked `failed` on the next boot.
-
-## AI Setup
-
-1. Create an Anthropic API key.
-2. In `server/.env` set `AI_PROVIDER=llm` and `AI_API_KEY=<your key>` (optionally `AI_MODEL`).
-3. Restart the server — the log prints `AI provider: LLM (claude-opus-5)`.
-
-The provider is selected on the server only; clients can never choose a model or provider. If `AI_PROVIDER=llm` but no key is set, the server logs a warning and falls back to demo mode.
-
-## Fallback Mode
-
-With `AI_PROVIDER=fallback` (the default) the **DevelopmentFallbackProvider** runs the *exact same* workflow: it parses the raw idea (audience, job-to-be-done, product type, domain), generates deterministic structured JSON for every stage, and passes it through the same Zod schemas, orchestrator, AIRun logging and persistence. The Challenge stage genuinely inspects the stored BrandDNA (e.g. category-style value propositions, stock phrases like "made simple", unselected names) — accept a fix and re-run it, and those issues disappear. The UI is identical in both modes; in development a small badge shows **AI: Demo Mode**.
-
-## API Endpoints
-
-Project and AI endpoints require a signed-in session (the `if_session` cookie); without one they return `401`. Browser requests that change data must come from an allowed `CLIENT_URL` origin (CSRF protection).
-
-**Accounts**
-
-| Method | Path | Purpose |
-|---|---|---|
-| POST | `/api/auth/signup` | `{ name, email, password, remember? }` → creates the account and a session |
-| POST | `/api/auth/login` | `{ email, password, remember? }` |
-| POST | `/api/auth/logout` | Ends this session |
-| POST | `/api/auth/logout-all` | Ends every session for the account |
-| GET | `/api/auth/me` | Current user, or `null` |
-| PATCH | `/api/auth/me` | `{ name }` |
-| POST | `/api/auth/change-password` | `{ current, next }` — signs out other devices |
-| DELETE | `/api/auth/me` | `{ password }` — deletes the account and all of its projects |
-| POST | `/api/auth/forgot-password` | `{ email }` — same response whether or not the account exists |
-| POST | `/api/auth/reset-password` | `{ token, password }` — single-use, expires after 30 minutes |
-
-No email service is connected yet, so the password-reset link is printed in the **server log**. Connect a provider (e.g. Resend, Postmark) in `requestPasswordReset` in `server/src/services/auth.service.ts` to email it.
-
-**Projects & AI**
-
-All responses use `{ "success": true, "data": … }` or `{ "success": false, "error": { "code", "message" } }`.
-Errors: `400` validation · `404` not found · `409` stage prerequisite missing · `502` AI failure · `500` database/internal.
-
-| Method | Path | Purpose |
-|---|---|---|
-| GET | `/api/health` | Status, database and AI mode |
-| POST | `/api/projects` | Create a project `{ rawIdea }` |
-| GET | `/api/projects` | List projects |
-| GET | `/api/projects/:id` | Get a project with BrandDNA |
-| PATCH | `/api/projects/:id` | Human edits `{ edits: [{ path, value }], accept: [...] }` (whitelisted paths) |
-| DELETE | `/api/projects/:id` | Delete project and its AI runs |
-| GET | `/api/projects/:id/runs` | AI run history |
-| GET | `/api/projects/:id/versions` | Version snapshots |
-| POST | `/api/projects/:id/versions/:versionId/restore` | Restore a snapshot |
-| GET | `/api/share/:id` | Public read-only brand (only when sharing is on) |
-| POST | `/api/ai/understand` | `{ projectId, rawIdea? }` |
-| POST | `/api/ai/strategy` | `{ projectId, section?, mode? }` — omit section for the full strategy; `mode: "fill"` generates one missing section (live progress); otherwise regenerates that section |
-| POST | `/api/ai/challenge` | `{ projectId }` |
-| POST | `/api/ai/challenge/apply` | `{ action: "accept", projectId, recommendation: { challengeId?, source, target, value } }` or `{ action: "keep_original", projectId, challengeId }` |
-| POST | `/api/ai/challenge/alternatives` | `{ projectId, challengeId }` → exactly 3 strategically different options |
-| POST | `/api/ai/visual` | `{ projectId }` — visual identity + visual consistency check |
-| POST | `/api/ai/consistency` | `{ projectId }` — Consistency Guardian |
-| POST | `/api/ai/brand-kit` | `{ projectId }` — final kit; sets `currentStage = "complete"` |
-
-## BrandDNA Schema
-
-Defined in `server/src/types/brandDNA.ts` (mirrored in `client/src/lib/types.ts`):
-
-```ts
-interface BrandDNA {
-  idea: { rawIdea; problem; targetAudience: { primary; secondary? }; userNeed; context?; opportunity;
-          keyInsights[]; assumptions[]; openQuestions[] };
-  positioning?: { category; audience; problem; differentiator; valueProposition; competitiveAngle;
-                  statement; rationale; valuePropositionRationale };
-  personality?: { traits: { name; reason; audienceFit }[]; traitsToAvoid[]; rationale };
-  naming?: { territories: { name; concept; rationale; examples[]; risks[] }[]; selectedTerritory?; selectedName? };
-  messaging?: { tagline; oneLinePitch; shortDescription; voice[]; tone; principles[]; rationale };
-  visual?: { colors: { name; hex; usage }[]; typography: { heading; body; rationale };
-             mood[]; imagery[]; shapes[]; composition[]; principles[]; avoid[]; rationale };
-  visualCheck?: { consistent; issues[] };
-  challenges: { id; type; severity; title; description; evidence; recommendation; target; suggestedValue;
-                resolved; resolution?; originalValue?; appliedValue?; alternatives? }[];
-  challengeSummary?: { overallAssessment; recommendedDirection | null };
-  consistency?: { consistent; checks[]; health[]; recommendations[] };
-  brandKit?: { name; tagline; oneLinePitch; brandSummary; …; launchHeadline; cta; socialLaunchPost };
-  finalBrand?: { name; tagline; summary };
-  decisions: { edited: string[]; accepted: string[] };   // human decisions — AI must respect these
-}
-```
-
-## AI Prompt Architecture
-
-- `prompts/context.ts` builds each stage's context from **only the BrandDNA sections it needs**, and appends the list of human-edited / accepted fields as the source of truth.
-- Each stage prompt defines one role and one responsibility, and asks for JSON only.
-- Output is constrained with the stage's Zod schema (`output_config.format`) and **re-validated with Zod**.
-- Malformed output → one **repair retry** with the validation errors included. Transient failures (timeouts, 429, 5xx) → one plain retry. Still failing → `502` with a friendly message; BrandDNA is untouched.
-- Regeneration adds an explicit "offer a meaningfully different take" instruction and touches one section only.
-
-## Challenge Engine
-
-The reviewer analyses ten failure modes: generic language, weak differentiation, audience too broad, unclear value proposition, contradictory positioning, personality mismatch, naming weakness, messaging inconsistency, clichéd startup language and visual conflicts.
-
-For each issue it must quote **evidence** from BrandDNA, name the **target field** it would change (from a fixed whitelist) and propose a concrete **suggested value**. It is explicitly told not to manufacture criticism — an empty `issues` array is a valid, celebrated result.
-
-User actions:
-- **Accept improvement** → writes only the target field, records `originalValue` / `appliedValue`, logs an AIRun.
-- **Edit** the suggestion before accepting.
-- **Generate alternatives** → exactly three strategically different options (outcome-, identity- and contrast-led).
-- **Keep original** → no BrandDNA change; stored as `resolution: "kept_original"`.
-
-## Export System
-
-Built in the browser from the final BrandDNA (`client/src/lib/export.ts`):
-
-- **IdeaForge-Brand-Kit.md** — Brand name, tagline, overview, problem, audience, positioning, value proposition, differentiator, personality, naming, voice, visual identity, colour palette, typography, imagery, messaging, launch assets and the consistency report.
-- **IdeaForge-Brand-Kit.json** — the complete structured BrandDNA.
-
-Copy-to-clipboard is available for the tagline, positioning, value proposition, pitch, descriptions, launch headline, CTA, social post and every HEX colour.
-
-## Demo Flow
-
-1. Open IdeaForge and enter: *"I want to build a platform that helps college students find teammates for hackathons."*
-2. Press **Enter** → the project is created and **Understand** runs (problem, audience, need, opportunity, insights, open questions).
-3. **Continue to Strategy** → positioning, value proposition, personality, naming territories and messaging.
-4. **Continue to Challenge** → the reviewer flags that the positioning *describes the category but not the difference*.
-5. It proposes **"Find the missing skill your next winning team needs."** → click **Accept improvement**; BrandDNA updates.
-6. Resolve the other issues (pick a name, keep or change the tagline).
-7. **Build visual identity** → colours, typography, mood, imagery and style, with a visual consistency check.
-8. **Complete brand** → the kit is compiled and the Consistency Guardian runs.
-9. Review Brand Health and the consistency report, copy assets, and **Download Brand Kit** (Markdown or JSON).
-10. Refresh at any point — everything is restored from MongoDB.
-
-To demo failure handling, start the server with `AI_SIMULATE_FAILURE=challenge` and use **Retry**.
-
-## Deployment
-
-- **Frontend (Vercel / Netlify):** root `client/`, build `npm run build`, output `dist/`. Set `VITE_API_BASE_URL=https://<your-api>/api`. SPA rewrites are included (`vercel.json`, `public/_redirects`).
-- **Backend (Render / Railway):** root `server/`, build `npm install && npm run build`, start `npm start`, health check `/api/health`. `render.yaml` is included. Set `MONGODB_URI`, `AI_PROVIDER`, `AI_API_KEY`, `AI_MODEL`, and `CLIENT_URL` (your frontend origin).
-- **Database:** MongoDB Atlas.
-
-No URLs are hard-coded; everything is configured through environment variables.
-
-**Cookies across domains (important for login).** Many browsers block cookies set by a different domain, so the most reliable setup keeps the API on the same site as the frontend. In `client/vercel.json`, add a rewrite **before** the SPA rewrite so Vercel forwards API calls to Render:
-
-```json
-{ "source": "/api/(.*)", "destination": "https://YOUR-API.onrender.com/api/$1" }
-```
-
-Then set `VITE_API_BASE_URL=/api` on Vercel, and on Render set `CLIENT_URL` to your Vercel URL and `COOKIE_SAMESITE=lax`. The session cookie is then first-party and works in every browser.
-
-## Testing & Prompt Evaluation
-
-```bash
-npm --prefix server test
-```
-
-Unit tests cover idea parsing, AI output validation, BrandDNA editing rules, the challenge engine (including that it returns **no** issues for a strong brand) and the orchestrator's repair/retry logic.
-
-```bash
-npm --prefix server run eval
-```
-
-Runs the whole pipeline on five sample ideas and scores the Challenge engine: are issues **grounded** in quoted BrandDNA text, **actionable**, does the brand **converge** after applying the fixes, and are the alternatives **distinct**. Run it with `AI_PROVIDER=llm` and your key to tune the prompts in `server/src/ai/prompts/` against the real model (this uses API credits). Reports are written to `server/eval-results/`.
-
-## Future Improvements
-
-- Google sign-in, email verification and emailed reset links (needs an email provider)
-- Team workspaces with comments on decisions
-- Competitor research with web search grounding in the Understand and Challenge stages (needs an API key)
-- Side-by-side comparison of two or three competing brand directions
-- Downloadable SVG/PNG logo files and a social-asset pack
-- Token-level streaming for long AI stages
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
