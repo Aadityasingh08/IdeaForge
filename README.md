@@ -2,8 +2,8 @@
 
 <div align="center">
 
-[![Vercel Deployment](https://img.shields.io/badge/Vercel-Live%20App-black?style=for-the-badge&logo=vercel)](https://client-adi0608.vercel.app)
-[![Vercel Pitch Deck](https://img.shields.io/badge/Vercel-10--Slide%20Pitch%20Deck-00DF8F?style=for-the-badge&logo=vercel)](https://client-adi0608.vercel.app/pitch-deck/69c546411d95c73df829fa57)
+[![Vercel Deployment](https://img.shields.io/badge/Vercel-Live%20App-black?style=for-the-badge&logo=vercel)](https://ideaforge-brand.vercel.app)
+[![Vercel Pitch Deck](https://img.shields.io/badge/Vercel-10--Slide%20Pitch%20Deck-00DF8F?style=for-the-badge&logo=vercel)](https://ideaforge-brand.vercel.app/pitch-deck/69c546411d95c73df829fa57)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React 19](https://img.shields.io/badge/React%2019-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
 [![MongoDB Atlas](https://img.shields.io/badge/MongoDB%20Atlas-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/atlas)
@@ -11,7 +11,7 @@
 
 **Turn any 1-line startup idea into an investor-ready company with BrandDNA, a 10-slide pitch deck, 3D merch studio, AI Shark Tank simulator, and viral distribution collateral in under 10 minutes.**
 
-[🌐 Explore Live App](https://client-adi0608.vercel.app) • [📊 View Live Pitch Deck](https://client-adi0608.vercel.app/pitch-deck/69c546411d95c73df829fa57) • [🚀 Deploy on Vercel](#-deployment)
+[🌐 Explore Live App](https://ideaforge-brand.vercel.app) • [📊 View Live Pitch Deck](https://ideaforge-brand.vercel.app/pitch-deck/69c546411d95c73df829fa57) • [🚀 Deploy on Vercel](#-deployment)
 
 </div>
 
@@ -19,11 +19,11 @@
 
 ## ⚡ Live Deployments
 
-- 🌐 **Production Web Application (Vercel):** [https://client-adi0608.vercel.app](https://client-adi0608.vercel.app)
+- 🌐 **Production Web Application (Primary):** [https://ideaforge-brand.vercel.app](https://ideaforge-brand.vercel.app)
+- 🌐 **Production Web Application (Workspace):** [https://ideaforge-workspace.vercel.app](https://ideaforge-workspace.vercel.app)
 - ⚙️ **Production REST API (Render):** [https://ideaforge-api-v7sv.onrender.com](https://ideaforge-api-v7sv.onrender.com)
-- 📊 **Interactive 10-Slide Investor Deck:** [https://client-adi0608.vercel.app/pitch-deck/69c546411d95c73df829fa57](https://client-adi0608.vercel.app/pitch-deck/69c546411d95c73df829fa57)
+- 📊 **Interactive 10-Slide Investor Deck:** [https://ideaforge-brand.vercel.app/pitch-deck/69c546411d95c73df829fa57](https://ideaforge-brand.vercel.app/pitch-deck/69c546411d95c73df829fa57)
 - 🗄️ **Database:** Connected & Hosted on MongoDB Atlas (`cluster0.abtxsnv.mongodb.net`)
-- 🔗 **Alternate Vercel Mirror:** [https://client-amber-omega.vercel.app](https://client-amber-omega.vercel.app)
 
 ---
 

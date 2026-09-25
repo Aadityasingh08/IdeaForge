@@ -15,10 +15,10 @@
 
 ## ⚡ Live Production URL
 
-- **Vercel Production URL:** [https://client-adi0608.vercel.app](https://client-adi0608.vercel.app)
+- **Primary Web App:** [https://ideaforge-brand.vercel.app](https://ideaforge-brand.vercel.app)
+- **Workspace Mirror:** [https://ideaforge-workspace.vercel.app](https://ideaforge-workspace.vercel.app)
 - **Render Backend API:** [https://ideaforge-api-v7sv.onrender.com](https://ideaforge-api-v7sv.onrender.com)
-- **Alternate Production Mirror:** [https://client-amber-omega.vercel.app](https://client-amber-omega.vercel.app)
-- **Full-Screen 10-Slide Pitch Deck:** [https://client-adi0608.vercel.app/pitch-deck/69c546411d95c73df829fa57](https://client-adi0608.vercel.app/pitch-deck/69c546411d95c73df829fa57)
+- **Full-Screen 10-Slide Pitch Deck:** [https://ideaforge-brand.vercel.app/pitch-deck/69c546411d95c73df829fa57](https://ideaforge-brand.vercel.app/pitch-deck/69c546411d95c73df829fa57)
 
 ---
 
