@@ -26,7 +26,7 @@ async function main() {
   }
 
   const app = createApp();
-  const server = app.listen(env.port, () => logger.info(`IdeaForge API listening on http://localhost:${env.port}`));
+  const server = app.listen(env.port, '0.0.0.0', () => logger.info(`IdeaForge API listening on http://0.0.0.0:${env.port}`));
   server.on('error', (err: NodeJS.ErrnoException) => {
     logger.error(err.code === 'EADDRINUSE' ? `Port ${env.port} is already in use — stop the other process or change PORT.` : err.message);
     process.exit(1);
