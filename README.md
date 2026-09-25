@@ -20,6 +20,7 @@
 ## ⚡ Live Deployments
 
 - 🌐 **Production Web Application (Vercel):** [https://client-adi0608.vercel.app](https://client-adi0608.vercel.app)
+- ⚙️ **Production REST API (Render):** [https://ideaforge-api-v7sv.onrender.com](https://ideaforge-api-v7sv.onrender.com)
 - 📊 **Interactive 10-Slide Investor Deck:** [https://client-adi0608.vercel.app/pitch-deck/69c546411d95c73df829fa57](https://client-adi0608.vercel.app/pitch-deck/69c546411d95c73df829fa57)
 - 🗄️ **Database:** Connected & Hosted on MongoDB Atlas (`cluster0.abtxsnv.mongodb.net`)
 - 🔗 **Alternate Vercel Mirror:** [https://client-amber-omega.vercel.app](https://client-amber-omega.vercel.app)
