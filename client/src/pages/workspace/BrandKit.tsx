@@ -20,6 +20,10 @@ import { BrandHealthCheck, BrandSection, ConsistencyReport, DownloadMenu } from 
 import { CompetitorMatrix } from '../../components/brand/CompetitorMatrix';
 import { AudienceSimulator } from '../../components/brand/AudienceSimulator';
 import { SocialLaunchStudio } from '../../components/brand/SocialLaunchStudio';
+import { SharkTankSimulator } from '../../components/brand/SharkTankSimulator';
+import { MerchStudio } from '../../components/brand/MerchStudio';
+import { ViralCampaignEngine } from '../../components/brand/ViralCampaignEngine';
+import { AudioVoiceStudio } from '../../components/brand/AudioVoiceStudio';
 import { ConfettiBlast } from '../../components/ui/ConfettiBlast';
 import { useToast } from '../../components/ui/Toast';
 import { useAutoRun, useCurrentWorkspace } from './shared';
@@ -33,6 +37,10 @@ const NAV = [
   { id: 'market-radar', label: 'Market Moat' },
   { id: 'audience-simulator', label: 'Audience Simulator' },
   { id: 'social-studio', label: 'Social Studio' },
+  { id: 'shark-tank', label: 'Shark Tank VC' },
+  { id: 'merch-studio', label: '3D Merch Studio' },
+  { id: 'viral-campaign', label: 'Viral Hooks' },
+  { id: 'audio-voice', label: 'Audio Commercial' },
 ];
 const NAV_IDS = NAV.map((n) => n.id);
 
@@ -456,6 +464,26 @@ function KitView({
           {/* SOCIAL LAUNCH STUDIO */}
           <section id="social-studio" aria-label="Social Studio" className="scroll-mt-28">
             <SocialLaunchStudio dna={d} />
+          </section>
+
+          {/* SHARK TANK / VC PITCH SIMULATOR */}
+          <section id="shark-tank" aria-label="Shark Tank VC Simulator" className="scroll-mt-28">
+            <SharkTankSimulator dna={d} />
+          </section>
+
+          {/* 3D MERCH & PACKAGING STUDIO */}
+          <section id="merch-studio" aria-label="3D Merch Studio" className="scroll-mt-28">
+            <MerchStudio dna={d} />
+          </section>
+
+          {/* VIRAL LAUNCH CAMPAIGN & HOOKS */}
+          <section id="viral-campaign" aria-label="Viral Launch Campaign" className="scroll-mt-28">
+            <ViralCampaignEngine dna={d} />
+          </section>
+
+          {/* AUDIO AD & PODCAST VOICEOVER STUDIO */}
+          <section id="audio-voice" aria-label="Audio Commercial Studio" className="scroll-mt-28">
+            <AudioVoiceStudio dna={d} />
           </section>
 
           {/* FINISH & PITCH DECK CTA */}
