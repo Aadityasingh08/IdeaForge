@@ -1,8 +1,9 @@
-# Render blueprint for the IdeaForge API (frontend deploys separately to Vercel/Netlify).
+# Render blueprint for the IdeaForge API (frontend deploys separately to Vercel).
 services:
   - type: web
     name: ideaforge-api
     runtime: node
+    plan: free
     rootDir: server
     buildCommand: npm install && npm run build
     startCommand: npm start
@@ -11,12 +12,12 @@ services:
       - key: NODE_ENV
         value: production
       - key: MONGODB_URI
-        sync: false # MongoDB Atlas connection string
-      - key: AI_PROVIDER
-        value: llm
-      - key: AI_API_KEY
-        sync: false # Anthropic API key
-      - key: AI_MODEL
-        value: claude-opus-5
+        value: mongodb+srv://adityasinghas0608_db_user:OsCm4qurO5IviIx5@cluster0.abtxsnv.mongodb.net/ideaforge?retryWrites=true&w=majority&appName=Cluster0
       - key: CLIENT_URL
-        sync: false # e.g. https://ideaforge.vercel.app
+        value: https://*.vercel.app
+      - key: AI_PROVIDER
+        value: fallback
+      - key: COOKIE_SAMESITE
+        value: none
+      - key: COOKIE_SECURE
+        value: "true"
