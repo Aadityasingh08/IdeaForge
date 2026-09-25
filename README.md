@@ -32,7 +32,8 @@
 
 | Platform | Role | Production URL | Status |
 | :--- | :--- | :--- | :--- |
-| **Vercel** | Primary Web App | [https://ideaforge-brand.vercel.app](https://ideaforge-brand.vercel.app) | 🟢 **200 OK — Global Edge** |
+| **Vercel** | Primary Production App | [https://ideaforge-brand.vercel.app](https://ideaforge-brand.vercel.app) | 🟢 **200 OK — Global Edge** |
+| **Vercel** | Official Branded Mirror | [https://ideaforge-official.vercel.app](https://ideaforge-official.vercel.app) | 🟢 **200 OK — Global Edge** |
 | **Vercel** | Workspace Mirror | [https://ideaforge-workspace.vercel.app](https://ideaforge-workspace.vercel.app) | 🟢 **200 OK — Global Edge** |
 | **Render** | REST API & AI Engine | [https://ideaforge-api-v7sv.onrender.com](https://ideaforge-api-v7sv.onrender.com) | 🟢 **Live Cloud Service** |
 | **MongoDB Atlas** | Production Database | `cluster0.abtxsnv.mongodb.net/ideaforge` | 🟢 **Connected 24/7** |

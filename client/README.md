@@ -18,6 +18,7 @@
 ## ⚡ Live Production URLs
 
 - 🌐 **Primary Web Application:** [https://ideaforge-brand.vercel.app](https://ideaforge-brand.vercel.app)
+- 🌐 **Official Branded Mirror:** [https://ideaforge-official.vercel.app](https://ideaforge-official.vercel.app)
 - 🌐 **Workspace Mirror:** [https://ideaforge-workspace.vercel.app](https://ideaforge-workspace.vercel.app)
 - ⚙️ **Render Backend API:** [https://ideaforge-api-v7sv.onrender.com](https://ideaforge-api-v7sv.onrender.com)
 - 📊 **Full-Screen 10-Slide Investor Deck:** [https://ideaforge-brand.vercel.app/pitch-deck/69c546411d95c73df829fa57](https://ideaforge-brand.vercel.app/pitch-deck/69c546411d95c73df829fa57)
