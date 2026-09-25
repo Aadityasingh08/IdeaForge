@@ -1,7 +1,8 @@
 import type { AIRunSummary, Alternative, ChallengeTarget, Project, ProjectSummary, SharedBrand, StrategySection, VersionSummary } from './types';
 import { ownerId } from './owner';
 
-const BASE = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.replace(/\/$/, '') || '/api';
+const rawBase = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.trim().replace(/\/$/, '');
+const BASE = rawBase ? (rawBase.endsWith('/api') ? rawBase : `${rawBase}/api`) : '/api';
 
 /** Error returned by the API in the standard { success: false, error } shape. */
 export class ApiError extends Error {
