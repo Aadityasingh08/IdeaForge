@@ -199,7 +199,7 @@ npm run dev
 
 | <img src="https://github.com/Aadityasingh08.png" width="120" style="border-radius: 50%" /><br />**Aditya Singh** | <img src="https://github.com/BhawnaBhadana.png" width="120" style="border-radius: 50%" /><br />**Bhawna Bhadana** |
 | :---: | :---: |
-| 🚀 **Full-Stack Architecture & AI Engine** | 🎨 **UI/UX Strategy & Brand Architecture** |
+| 🚀 **Full-Stack Architecture & AI Engineer** | 🚀 **Full-Stack Architecture & AI Engineer** |
 | [![GitHub](https://img.shields.io/badge/GitHub-Aadityasingh08-181717?style=flat&logo=github)](https://github.com/Aadityasingh08) | [![GitHub](https://img.shields.io/badge/GitHub-BhawnaBhadana-181717?style=flat&logo=github)](https://github.com/BhawnaBhadana) |
 | [![Email](https://img.shields.io/badge/Email-adityasingh.as0608%40gmail.com-EA4335?style=flat&logo=gmail)](mailto:adityasingh.as0608@gmail.com) | [![Email](https://img.shields.io/badge/Email-bhawnabhadana89%40gmail.com-EA4335?style=flat&logo=gmail)](mailto:bhawnabhadana89@gmail.com) |
 
