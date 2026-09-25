@@ -1,10 +1,13 @@
 import type { AIRunSummary, Alternative, ChallengeTarget, Project, ProjectSummary, SharedBrand, StrategySection, VersionSummary } from './types';
 import { ownerId } from './owner';
 
-const envBase = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.trim();
-const fallbackBase = 'https://ideaforge-api-v7sv.onrender.com/api';
-const rawBase = envBase && envBase !== '/api' ? envBase.replace(/\/$/, '') : fallbackBase;
-export const BASE = rawBase.endsWith('/api') ? rawBase : `${rawBase}/api`;
+const rawEnv = (import.meta.env.VITE_API_BASE_URL as string | undefined) || '';
+const cleanEnv = rawEnv.replace(/[^\x20-\x7E]/g, '').trim();
+const fallback = 'https://ideaforge-api-v7sv.onrender.com/api';
+const baseCandidate = cleanEnv && cleanEnv !== '/api' && cleanEnv.startsWith('http') ? cleanEnv : fallback;
+export const BASE = baseCandidate.replace(/\/+$/, '').endsWith('/api')
+  ? baseCandidate.replace(/\/+$/, '')
+  : `${baseCandidate.replace(/\/+$/, '')}/api`;
 
 /** Error returned by the API in the standard { success: false, error } shape. */
 export class ApiError extends Error {
