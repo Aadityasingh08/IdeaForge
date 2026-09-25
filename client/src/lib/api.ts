@@ -1,8 +1,10 @@
 import type { AIRunSummary, Alternative, ChallengeTarget, Project, ProjectSummary, SharedBrand, StrategySection, VersionSummary } from './types';
 import { ownerId } from './owner';
 
-const rawBase = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.trim().replace(/\/$/, '');
-const BASE = rawBase ? (rawBase.endsWith('/api') ? rawBase : `${rawBase}/api`) : '/api';
+const envBase = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.trim();
+const fallbackBase = 'https://ideaforge-api-v7sv.onrender.com/api';
+const rawBase = envBase && envBase !== '/api' ? envBase.replace(/\/$/, '') : fallbackBase;
+export const BASE = rawBase.endsWith('/api') ? rawBase : `${rawBase}/api`;
 
 /** Error returned by the API in the standard { success: false, error } shape. */
 export class ApiError extends Error {
